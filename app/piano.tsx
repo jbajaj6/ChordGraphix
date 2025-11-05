@@ -9,28 +9,49 @@ interface Key {
 }
 
 export default function Piano() {
+  // Store unique key identifiers (e.g., "B-6", "B-13" to distinguish between octaves)
   const [pressedKeys, setPressedKeys] = useState<string[]>([]);
   const [result, setResult] = useState<string>('');
 
-  // White keys
-  const whiteKeys = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+  // White keys - 2 octaves (C to B, C to B)
+  const whiteKeys = ['C', 'D', 'E', 'F', 'G', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'A', 'B'];
   
-  // Black keys with their positions relative to white keys
+  // Black keys with their positions relative to white keys - 2 octaves
   const blackKeys: Key[] = [
-    { note: 'C#', isBlack: true, position: 0 }, // Between C and D
-    { note: 'D#', isBlack: true, position: 1 }, // Between D and E
-    { note: 'F#', isBlack: true, position: 3 }, // Between F and G
-    { note: 'G#', isBlack: true, position: 4 }, // Between G and A
-    { note: 'A#', isBlack: true, position: 5 }, // Between A and B
+    // First octave
+    { note: 'C#', isBlack: true, position: 0 }, // Between C and D (1st octave)
+    { note: 'D#', isBlack: true, position: 1 }, // Between D and E (1st octave)
+    { note: 'F#', isBlack: true, position: 3 }, // Between F and G (1st octave)
+    { note: 'G#', isBlack: true, position: 4 }, // Between G and A (1st octave)
+    { note: 'A#', isBlack: true, position: 5 }, // Between A and B (1st octave)
+    // Second octave
+    { note: 'C#', isBlack: true, position: 7 }, // Between C and D (2nd octave)
+    { note: 'D#', isBlack: true, position: 8 }, // Between D and E (2nd octave)
+    { note: 'F#', isBlack: true, position: 10 }, // Between F and G (2nd octave)
+    { note: 'G#', isBlack: true, position: 11 }, // Between G and A (2nd octave)
+    { note: 'A#', isBlack: true, position: 12 }, // Between A and B (2nd octave)
   ];
 
-  const toggleKey = (note: string) => {
-    console.log('Key pressed:', note);
-    if (pressedKeys.includes(note)) {
-      setPressedKeys(pressedKeys.filter(k => k !== note));
+  const toggleKey = (uniqueKey: string, note: string) => {
+    console.log('Key pressed:', note, 'unique:', uniqueKey);
+    if (pressedKeys.includes(uniqueKey)) {
+      setPressedKeys(pressedKeys.filter(k => k !== uniqueKey));
     } else {
-      setPressedKeys([...pressedKeys, note]);
+      setPressedKeys([...pressedKeys, uniqueKey]);
     }
+  };
+
+  // Extract note names from pressed keys for chord detection (removes octave info)
+  const getPressedNoteNames = (): string[] => {
+    return pressedKeys.map(key => {
+      // Extract note name from unique key (e.g., "B-6" -> "B", "C#-0" -> "C#")
+      // Format is "NOTE-INDEX" or "NOTE#-INDEX"
+      const parts = key.split('-');
+      if (parts.length > 0) {
+        return parts[0]; // Return the note name part (before the dash)
+      }
+      return key; // Fallback if format is unexpected
+    });
   };
 
   const checkChord = () => {
@@ -41,10 +62,12 @@ export default function Piano() {
     }
 
     try {
-      console.log('Checking keys:', pressedKeys);
+      // Get note names (without octave info) for chord detection
+      const noteNames = getPressedNoteNames();
+      console.log('Checking keys:', noteNames);
       
       // Use local chord detection
-      const chordInfo = detectChordDetailed(pressedKeys);
+      const chordInfo = detectChordDetailed(noteNames);
       const detectedChord = chordInfo.chord;
       
       // Format result with alternatives if available
@@ -52,14 +75,14 @@ export default function Piano() {
       if (chordInfo.alternatives.length > 0) {
         resultText += `\nAlternatives: ${chordInfo.alternatives.join(', ')}`;
       }
-      resultText += `\nNotes: ${pressedKeys.join(', ')}`;
+      resultText += `\nNotes: ${noteNames.join(', ')}`;
       
       setResult(resultText);
       
       // Also show alert for immediate feedback
       Alert.alert(
         'Chord Detected',
-        `Chord: ${detectedChord}\n${chordInfo.alternatives.length > 0 ? `Alternatives: ${chordInfo.alternatives.join(', ')}\n` : ''}Notes: ${pressedKeys.join(', ')}`
+        `Chord: ${detectedChord}\n${chordInfo.alternatives.length > 0 ? `Alternatives: ${chordInfo.alternatives.join(', ')}\n` : ''}Notes: ${noteNames.join(', ')}`
       );
       
     } catch (error) {
@@ -74,31 +97,35 @@ export default function Piano() {
       <Text style={styles.title}>Piano Chord Detector</Text>
       
       <Text style={styles.info}>
-        Pressed: {pressedKeys.join(', ') || 'None'}
+        Pressed: {getPressedNoteNames().join(', ') || 'None'}
       </Text>
 
       <View style={styles.keyboardContainer}>
         {/* Black keys row */}
         <View style={styles.blackKeysRow}>
-          {blackKeys.map((key) => {
+          {blackKeys.map((key, index) => {
             // Position black key centered between white keys
             // White keys are 60px wide, black keys are 36px wide
             // Formula: left = (position + 1) * 60 - 36/2 = (position + 1) * 60 - 18
             const leftPosition = (key.position + 1) * 60 - 18;
+            // Create unique key for React
+            const uniqueKey = `${key.note}-${index}`;
+            // For display, show octave indicator for second octave black keys
+            const displayNote = index >= 5 ? `${key.note}₂` : key.note;
             
             return (
               <Pressable
-                key={key.note}
+                key={uniqueKey}
                 style={[
                   styles.blackKey,
                   {
                     left: leftPosition,
                   },
-                  pressedKeys.includes(key.note) && styles.blackKeyPressed
+                  pressedKeys.includes(uniqueKey) && styles.blackKeyPressed
                 ]}
-                onPress={() => toggleKey(key.note)}
+                onPress={() => toggleKey(uniqueKey, key.note)}
               >
-                <Text style={styles.blackKeyLabel}>{key.note}</Text>
+                <Text style={styles.blackKeyLabel}>{displayNote}</Text>
               </Pressable>
             );
           })}
@@ -106,18 +133,27 @@ export default function Piano() {
 
         {/* White keys row */}
         <View style={styles.whiteKeysRow}>
-          {whiteKeys.map((note) => (
-            <Pressable
-              key={note}
-              style={[
-                styles.whiteKey,
-                pressedKeys.includes(note) && styles.whiteKeyPressed
-              ]}
-              onPress={() => toggleKey(note)}
-            >
-              <Text style={styles.whiteKeyLabel}>{note}</Text>
-            </Pressable>
-          ))}
+          {whiteKeys.map((note, index) => {
+            // Create unique key by combining note and index
+            // This allows us to distinguish between same notes in different octaves
+            const uniqueKey = `${note}-${index}`;
+            // For display, show octave indicator (1 for first octave, 2 for second)
+            const octave = index < 7 ? 1 : 2;
+            const displayNote = index === 7 ? 'C₂' : (index === 0 ? 'C₁' : note);
+            
+            return (
+              <Pressable
+                key={uniqueKey}
+                style={[
+                  styles.whiteKey,
+                  pressedKeys.includes(uniqueKey) && styles.whiteKeyPressed
+                ]}
+                onPress={() => toggleKey(uniqueKey, note)}
+              >
+                <Text style={styles.whiteKeyLabel}>{displayNote}</Text>
+              </Pressable>
+            );
+          })}
         </View>
       </View>
 
@@ -197,7 +233,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: 420, // Match white keys width: 7 keys * 60px
+    width: 840, // Match white keys width: 14 keys * 60px (2 octaves)
     height: 130,
     zIndex: 1,
   },
