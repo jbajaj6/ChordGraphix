@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
+import { detectChordDetailed } from './chordDetection';
 
 interface Key {
   note: string;
@@ -32,31 +33,39 @@ export default function Piano() {
     }
   };
 
-  const checkChord = async () => {
-    Alert.alert('Button Pressed!', `Keys: ${pressedKeys.join(', ')}`);
+  const checkChord = () => {
+    if (pressedKeys.length === 0) {
+      Alert.alert('No Keys Pressed', 'Please press some keys to detect a chord.');
+      setResult('');
+      return;
+    }
 
     try {
       console.log('Checking keys:', pressedKeys);
       
-      const response = await fetch('http://localhost:5001/check-chord', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          keys: pressedKeys,
-          expected_chord: 'C Major'
-        })
-      });
-
-      const data = await response.json();
-      console.log('Response:', data);
+      // Use local chord detection
+      const chordInfo = detectChordDetailed(pressedKeys);
+      const detectedChord = chordInfo.chord;
       
-      setResult(`Detected: ${data.detected_chord}\n${data.is_correct ? '✓ Correct!' : '✗ Incorrect'}`);
+      // Format result with alternatives if available
+      let resultText = `Detected: ${detectedChord}`;
+      if (chordInfo.alternatives.length > 0) {
+        resultText += `\nAlternatives: ${chordInfo.alternatives.join(', ')}`;
+      }
+      resultText += `\nNotes: ${pressedKeys.join(', ')}`;
+      
+      setResult(resultText);
+      
+      // Also show alert for immediate feedback
+      Alert.alert(
+        'Chord Detected',
+        `Chord: ${detectedChord}\n${chordInfo.alternatives.length > 0 ? `Alternatives: ${chordInfo.alternatives.join(', ')}\n` : ''}Notes: ${pressedKeys.join(', ')}`
+      );
       
     } catch (error) {
-      console.error('Error:', error);
-      Alert.alert('Error', 'Could not connect to backend');
+      console.error('Error detecting chord:', error);
+      Alert.alert('Error', 'Failed to detect chord. Please try again.');
+      setResult('Error detecting chord');
     }
   };
 
