@@ -1,50 +1,73 @@
-# Welcome to your Expo app 👋
+# ChordGraphix
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An Expo (React Native) app that renders a 2–octave piano keyboard and detects musical chords from pressed keys. It includes a clean UI with realistic white/black keys and local chord detection powered by `@tonaljs`. An optional Flask backend is provided but not required for detection.
 
-## Get started
+## Features
 
-1. Install dependencies
+- Two-octave interactive piano (14 white keys, 10 black keys)
+- Individual key highlighting (octave-aware)
+- On-device chord detection with alternatives via `@tonaljs/chord-detect`
+- Manual fallback detector for common chords (major, minor, 7th, sus, extended)
+- Optional Flask API (`/check-chord`) for server-side detection
 
-   ```bash
-   npm install
-   ```
+## Project Structure
 
-2. Start the app
+- `app/index.tsx` – Home screen with navigation
+- `app/piano.tsx` – Piano UI and interactions
+- `app/chordDetection.ts` – Chord detection helper (tonaljs + fallback)
+- `backend/app.py` – Optional Flask server
+- `backend/chord_detection.py` – Simple server-side detector example
 
-   ```bash
-   npx expo start
-   ```
+## Prerequisites
 
-In the output, you'll find options to open the app in a
+- Node.js (LTS recommended)
+- npm
+- For iOS simulator: Xcode; for Android: Android Studio/Emulator
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Install
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Note: Project scripts call the local Expo CLI directly. No global Expo install is required.
 
-## Learn more
+## Run
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+# Start Metro and open the platform menu
+npm run start
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+# Or directly start a platform
+npm run ios
+npm run android
+npm run web
+```
 
-## Join the community
+If you see an "expo: command not found" error when using other tools, prefer these npm scripts, which invoke the bundled CLI via `node node_modules/.bin/expo`.
 
-Join our community of developers creating universal apps.
+## Usage
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+1. Launch the app and open the Piano screen.
+2. Tap white or black keys to select notes (keys highlight individually, per octave).
+3. Press "Check Chord" to detect the chord. The app shows the detected chord, alternative interpretations, and the pressed notes.
+
+## Optional: Run the Flask Backend
+
+The app performs detection locally, but you can also run the backend for experimentation.
+
+```bash
+cd backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python app.py  # serves on http://localhost:5001
+```
+
+In `app/piano.tsx`, the local detector is used. You can adapt it to call `http://localhost:5001/check-chord` if you want to compare results.
+
+## Tech Stack
+
+- React Native + Expo Router
+- `@tonaljs/chord-detect`, `@tonaljs/chord`, `@tonaljs/note`
+- TypeScript
+- (Optional) Flask + Flask-CORS
