@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { detectChordDetailed } from './chordDetection';
+import { chordPlayer } from './audioPlayer';
 
 interface Key {
   note: string;
@@ -32,8 +33,12 @@ export default function Piano() {
     { note: 'A#', isBlack: true, position: 12 }, // Between A and B (2nd octave)
   ];
 
-  const toggleKey = (uniqueKey: string, note: string) => {
+  const toggleKey = async (uniqueKey: string, note: string) => {
     console.log('Key pressed:', note, 'unique:', uniqueKey);
+    
+    // Play the note sound
+    await chordPlayer.playNote(`${note}4`, 0.5);
+    
     if (pressedKeys.includes(uniqueKey)) {
       setPressedKeys(pressedKeys.filter(k => k !== uniqueKey));
     } else {
@@ -89,6 +94,15 @@ export default function Piano() {
       console.error('Error detecting chord:', error);
       Alert.alert('Error', 'Failed to detect chord. Please try again.');
       setResult('Error detecting chord');
+    }
+  };
+
+  const playCurrentChord = async () => {
+    const noteNames = getPressedNoteNames();
+    if (noteNames.length > 0) {
+      await chordPlayer.playChord(noteNames, 2);
+    } else {
+      Alert.alert('No Keys Pressed', 'Please press some keys first.');
     }
   };
 
@@ -160,6 +174,10 @@ export default function Piano() {
       <Pressable style={styles.checkButton} onPress={checkChord}>
         <Text style={styles.buttonText}>Check Chord</Text>
       </Pressable>
+
+      <Pressable style={[styles.checkButton, styles.playButton]} onPress={playCurrentChord}>
+          <Text style={styles.buttonText}>🔊 Play Chord</Text>
+        </Pressable>
 
       {result ? (
         <Text style={styles.result}>{result}</Text>
@@ -276,6 +294,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
+  },
+  playButton: {
+    backgroundColor: '#007AFF',
+    shadowColor: '#007AFF',
   },
   buttonText: {
     color: '#fff',

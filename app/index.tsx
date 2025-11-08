@@ -15,6 +15,12 @@ export default function Index() {
             <Text style={styles.buttonText}>Go to Piano</Text>
           </Pressable>
         </Link>
+
+        <Link href="/songAnalyzer" asChild>
+          <Pressable style={styles.button}>
+            <Text style={styles.buttonText}>Analyze Song</Text>
+          </Pressable>
+        </Link>
       </View>
 
       {/* Right: Style Guide */}
