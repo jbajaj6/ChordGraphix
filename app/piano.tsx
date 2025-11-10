@@ -1,7 +1,16 @@
-import { useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { useMemo, useRef, useState } from 'react';
+import {
+  GestureResponderEvent,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from 'react-native';
 import { chordPlayer } from './audioPlayer';
 import { detectChordDetailed } from './chordDetection';
+import { theme } from './theme';
 
 const WHITE_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'] as const;
 const BLACK_NOTE_DEFS = [
@@ -45,7 +54,7 @@ const toSubscript = (value: number) =>
 export default function Piano() {
   const { width } = useWindowDimensions();
   const [pressedKeys, setPressedKeys] = useState<string[]>([]);
-  const [result, setResult] = useState<string>('');
+  const [result, setResult] = useState<string>('Tap keys to preview their tone and build a chord.');
 
   const isCompact = width < 620;
   const octaveCount = isCompact ? 1 : 2;
@@ -87,13 +96,16 @@ export default function Piano() {
     return map;
   }, [whiteKeys, blackKeys]);
 
+  const pointerKeyMap = useRef<Map<string, string>>(new Map());
+  const lastInteractionWasTouch = useRef(false);
+
   const toggleKey = async (key: PianoKey) => {
     const { uniqueKey, note, octave } = key;
     const isPressed = pressedKeys.includes(uniqueKey);
 
     if (!isPressed) {
       try {
-        await chordPlayer.playNote(`${note}${octave}`, 0.5);
+        await chordPlayer.playNote(`${note}${octave}`, 0.45);
       } catch (error) {
         console.error('Error playing note:', error);
       }
@@ -119,9 +131,38 @@ export default function Piano() {
       })
       .filter(Boolean);
 
+  const handleTouchStart = (key: PianoKey) => (event: GestureResponderEvent) => {
+    lastInteractionWasTouch.current = true;
+    const touches = event.nativeEvent.changedTouches ?? [];
+    touches.forEach((touch) => {
+      const id = String(touch.identifier ?? touch.target ?? 0);
+      if (!pointerKeyMap.current.has(id)) {
+        pointerKeyMap.current.set(id, key.uniqueKey);
+        toggleKey(key);
+      }
+    });
+  };
+
+  const handleTouchEnd = (event: GestureResponderEvent) => {
+    const touches = event.nativeEvent.changedTouches ?? [];
+    touches.forEach((touch) => {
+      const id = String(touch.identifier ?? touch.target ?? 0);
+      pointerKeyMap.current.delete(id);
+    });
+  };
+
+  const handlePress = (key: PianoKey) => {
+    if (lastInteractionWasTouch.current) {
+      // The touch handler already toggled the key; reset for future mouse interactions.
+      lastInteractionWasTouch.current = false;
+      return;
+    }
+    toggleKey(key);
+  };
+
   const checkChord = () => {
     if (pressedKeys.length === 0) {
-      setResult('No keys selected. Tap piano keys to build a chord.');
+      setResult('No keys selected yet. Tap a triad to detect its chord.');
       return;
     }
 
@@ -146,101 +187,160 @@ export default function Piano() {
   const playCurrentChord = async () => {
     const notesWithOctave = getPressedNotesWithOctave();
     if (notesWithOctave.length === 0) {
-      setResult('No keys selected. Tap piano keys to build a chord.');
+      setResult('Select at least one key before playing a chord.');
       return;
     }
 
     try {
-      await chordPlayer.playChord(notesWithOctave, 1.5);
+      await chordPlayer.playChord(notesWithOctave, 1.35);
     } catch (error) {
       console.error('Error playing chord:', error);
     }
   };
 
-
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Piano Chord Detector</Text>
-      
-      <Text style={styles.info}>
-        Pressed: {getPressedNoteNames().join(', ') || 'None'}
-      </Text>
-
-      <View style={[styles.keyboardContainer, { width: keyboardWidth }]}>
-        {/* Black keys row */}
-        <View style={[styles.blackKeysRow, { width: keyboardWidth }]}>
-          {blackKeys.map((key) => {
-            const leftPosition = (key.position + 1) * WHITE_KEY_WIDTH - BLACK_KEY_WIDTH / 2;
-            return (
-              <Pressable
-                key={key.uniqueKey}
-                style={[
-                  styles.blackKey,
-                  {
-                    left: leftPosition,
-                  },
-                  pressedKeys.includes(key.uniqueKey) && styles.blackKeyPressed,
-                ]}
-                onPress={() => toggleKey(key)}
-              >
-                <Text style={styles.blackKeyLabel}>{key.displayLabel}</Text>
-              </Pressable>
-            );
-          })}
+    <ScrollView contentContainerStyle={styles.scrollContent} style={styles.screen}>
+      <View style={styles.headerRow}>
+        <View>
+          <Text style={styles.title}>Piano Chord Studio</Text>
+          <Text style={styles.subtitle}>
+            Adaptive {octaveCount}-octave keyboard with live audio and tonal.js detection.
+          </Text>
         </View>
-
-        {/* White keys row */}
-        <View style={[styles.whiteKeysRow, { width: keyboardWidth }]}>
-          {whiteKeys.map((key) => (
-            <Pressable
-              key={key.uniqueKey}
-              style={[styles.whiteKey, pressedKeys.includes(key.uniqueKey) && styles.whiteKeyPressed]}
-              onPress={() => toggleKey(key)}
-            >
-              <Text style={styles.whiteKeyLabel}>{key.displayLabel}</Text>
-            </Pressable>
-          ))}
+        <View style={styles.badge}>
+          <Text style={styles.badgeText}>{isCompact ? 'Compact mode' : 'Wide mode'}</Text>
         </View>
       </View>
 
-      <Pressable style={styles.checkButton} onPress={checkChord}>
-        <Text style={styles.buttonText}>Check Chord</Text>
-      </Pressable>
+      <View style={styles.keyboardPanel}>
+        <View style={[styles.keyboardContainer, { width: keyboardWidth }]}>
+          <View style={[styles.blackKeysRow, { width: keyboardWidth }]} pointerEvents="box-none">
+            {blackKeys.map((key) => {
+              const leftPosition = (key.position + 1) * WHITE_KEY_WIDTH - BLACK_KEY_WIDTH / 2;
+              const isPressed = pressedKeys.includes(key.uniqueKey);
+              return (
+                <Pressable
+                  key={key.uniqueKey}
+                  style={[
+                    styles.blackKey,
+                    {
+                      left: leftPosition,
+                      width: BLACK_KEY_WIDTH,
+                    },
+                    isPressed && styles.blackKeyPressed,
+                  ]}
+                  onTouchStart={handleTouchStart(key)}
+                  onTouchEnd={handleTouchEnd}
+                  onTouchCancel={handleTouchEnd}
+                  onPress={() => handlePress(key)}
+                >
+                  <Text style={styles.blackKeyLabel}>{key.displayLabel}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
 
-      <Pressable style={[styles.checkButton, styles.playButton]} onPress={playCurrentChord}>
-          <Text style={styles.buttonText}>🔊 Play Chord</Text>
+          <View style={[styles.whiteKeysRow, { width: keyboardWidth }]}>
+            {whiteKeys.map((key) => {
+              const isPressed = pressedKeys.includes(key.uniqueKey);
+              return (
+                <Pressable
+                  key={key.uniqueKey}
+                  style={[
+                    styles.whiteKey,
+                    isPressed && styles.whiteKeyPressed,
+                    { width: WHITE_KEY_WIDTH },
+                  ]}
+                  onTouchStart={handleTouchStart(key)}
+                  onTouchEnd={handleTouchEnd}
+                  onTouchCancel={handleTouchEnd}
+                  onPress={() => handlePress(key)}
+                >
+                  <Text style={styles.whiteKeyLabel}>{key.displayLabel}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.controlsRow}>
+        <Pressable style={styles.primaryButton} onPress={checkChord}>
+          <Text style={styles.primaryButtonText}>Check Chord</Text>
         </Pressable>
+        <Pressable style={styles.secondaryButton} onPress={playCurrentChord}>
+          <Text style={styles.secondaryButtonText}>Play Selection</Text>
+        </Pressable>
+        <Pressable
+          style={styles.surfaceButton}
+          onPress={() => {
+            setPressedKeys([]);
+            setResult('Cleared. Select new notes to begin.');
+          }}
+        >
+          <Text style={styles.surfaceButtonText}>Reset</Text>
+        </Pressable>
+      </View>
 
-      {result ? (
-        <Text style={styles.result}>{result}</Text>
-      ) : null}
-    </View>
+      <View style={styles.statusCard}>
+        <Text style={styles.statusTitle}>Session Status</Text>
+        <Text style={styles.statusBody}>{result}</Text>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    backgroundColor: theme.colors.background,
+  },
+  scrollContent: {
+    paddingBottom: theme.spacing(6),
+    paddingHorizontal: theme.spacing(3),
+    paddingTop: theme.spacing(6),
+    gap: theme.spacing(4),
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: theme.spacing(2),
   },
   title: {
+    ...theme.typography.title,
     fontSize: 28,
-    color: '#fff',
-    marginBottom: 20,
-    fontWeight: 'bold',
+    color: theme.colors.textPrimary,
   },
-  info: {
-    fontSize: 16,
-    color: '#aaa',
-    marginBottom: 30,
+  subtitle: {
+    color: theme.colors.textSecondary,
+    fontSize: 15,
+    marginTop: theme.spacing(1),
+    lineHeight: 22,
+  },
+  badge: {
+    backgroundColor: theme.colors.accentSoft,
+    paddingHorizontal: theme.spacing(1.5),
+    paddingVertical: theme.spacing(0.75),
+    borderRadius: 999,
+  },
+  badgeText: {
+    color: theme.colors.accent,
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  keyboardPanel: {
+    padding: theme.spacing(2),
+    borderRadius: theme.radii.md,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    alignItems: 'center',
   },
   keyboardContainer: {
     position: 'relative',
-    marginBottom: 30,
+    marginBottom: theme.spacing(2),
     alignItems: 'center',
+    overflow: 'visible',
   },
   whiteKeysRow: {
     flexDirection: 'row',
@@ -249,14 +349,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: '#f0f0f0',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
   },
   whiteKey: {
-    width: 60,
     height: 200,
     backgroundColor: '#fff',
     borderRightWidth: 1,
@@ -275,9 +369,9 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   whiteKeyLabel: {
+    color: '#333',
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
   },
   blackKeysRow: {
     position: 'absolute',
@@ -288,10 +382,9 @@ const styles = StyleSheet.create({
   },
   blackKey: {
     position: 'absolute',
-    width: 36,
+    width: BLACK_KEY_WIDTH,
     height: 130,
     backgroundColor: '#1a1a1a',
-    borderRadius: 0,
     borderTopLeftRadius: 4,
     borderTopRightRadius: 4,
     justifyContent: 'flex-end',
@@ -314,32 +407,64 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
-  checkButton: {
-    backgroundColor: '#28a745',
-    paddingHorizontal: 40,
-    paddingVertical: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-    shadowColor: '#28a745',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+  controlsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: theme.spacing(2),
   },
-  playButton: {
-    backgroundColor: '#007AFF',
-    shadowColor: '#007AFF',
-    marginBottom: 10,
+  primaryButton: {
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing(2.5),
+    paddingVertical: theme.spacing(1.5),
+    borderRadius: 999,
+    ...theme.shadows.soft,
   },
-  buttonText: {
+  primaryButtonText: {
     color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
   },
-  result: {
-    fontSize: 20,
-    color: '#fff',
-    textAlign: 'center',
-    marginTop: 10,
+  secondaryButton: {
+    backgroundColor: theme.colors.surfaceAlt,
+    borderRadius: 999,
+    paddingHorizontal: theme.spacing(2.5),
+    paddingVertical: theme.spacing(1.5),
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  secondaryButtonText: {
+    color: theme.colors.accent,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  surfaceButton: {
+    backgroundColor: 'transparent',
+    borderRadius: 999,
+    paddingHorizontal: theme.spacing(2.5),
+    paddingVertical: theme.spacing(1.5),
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  surfaceButtonText: {
+    color: theme.colors.textMuted,
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  statusCard: {
+    backgroundColor: theme.colors.surfaceAlt,
+    borderRadius: theme.radii.md,
+    padding: theme.spacing(2.5),
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    gap: theme.spacing(1.5),
+  },
+  statusTitle: {
+    ...theme.typography.headline,
+    color: theme.colors.textPrimary,
+  },
+  statusBody: {
+    ...theme.typography.body,
+    color: theme.colors.textSecondary,
+    lineHeight: 24,
   },
 });
