@@ -1,16 +1,12 @@
+import * as DocumentPicker from 'expo-document-picker';
 import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
+import { theme } from '../src/theme';
 
-import { theme } from './theme';
-
-// Simple note-based analyzer without Essentia for now
 export default function SongAnalyzer() {
   const [analyzing, setAnalyzing] = useState(false);
   const [results, setResults] = useState<any>(null);
-  const [feedback, setFeedback] = useState<{ type: 'info' | 'success' | 'error'; message: string } | null>(
-    null,
-  );
+  const [feedback, setFeedback] = useState<{ type: 'info' | 'success' | 'error'; message: string } | null>(null);
 
   const pickAndAnalyzeSong = async () => {
     try {
@@ -151,183 +147,37 @@ export default function SongAnalyzer() {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  content: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(8),
-    gap: theme.spacing(3),
-  },
-  headerCard: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radii.lg,
-    padding: theme.spacing(3),
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing(3),
-    ...theme.shadows.card,
-  },
-  headerTextGroup: {
-    flex: 1,
-    gap: theme.spacing(1.5),
-  },
-  headerTitle: {
-    ...theme.typography.title,
-    fontSize: 30,
-    color: theme.colors.textPrimary,
-  },
-  headerSubtitle: {
-    ...theme.typography.body,
-    color: theme.colors.textSecondary,
-    lineHeight: 24,
-  },
-  heroTags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: theme.spacing(1),
-  },
-  heroTag: {
-    backgroundColor: theme.colors.accentSoft,
-    borderRadius: 999,
-    paddingHorizontal: theme.spacing(1.5),
-    paddingVertical: theme.spacing(0.5),
-  },
-  heroTagText: {
-    color: theme.colors.accent,
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.4,
-  },
-  heroGraphic: {
-    width: 120,
-    height: 120,
-    opacity: 0.75,
-  },
-  panel: {
-    backgroundColor: theme.colors.surfaceAlt,
-    borderRadius: theme.radii.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    padding: theme.spacing(3),
-    gap: theme.spacing(2),
-  },
-  panelTitle: {
-    ...theme.typography.headline,
-    color: theme.colors.textPrimary,
-  },
-  panelBody: {
-    ...theme.typography.body,
-    color: theme.colors.textSecondary,
-    lineHeight: 23,
-  },
-  primaryButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.radii.md,
-    paddingVertical: theme.spacing(1.5),
-    alignItems: 'center',
-    ...theme.shadows.soft,
-  },
-  primaryButtonDisabled: {
-    opacity: 0.6,
-  },
-  primaryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  feedbackCard: {
-    borderRadius: theme.radii.md,
-    padding: theme.spacing(1.5),
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.surface,
-  },
-  feedbackSuccess: {
-    borderColor: theme.colors.success,
-    backgroundColor: 'rgba(52, 211, 153, 0.12)',
-  },
-  feedbackError: {
-    borderColor: theme.colors.danger,
-    backgroundColor: 'rgba(248, 113, 113, 0.12)',
-  },
-  feedbackText: {
-    ...theme.typography.body,
-    color: theme.colors.textPrimary,
-  },
-  resultsCard: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radii.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    padding: theme.spacing(3),
-    gap: theme.spacing(2),
-  },
-  resultsTitle: {
-    ...theme.typography.headline,
-    color: theme.colors.textPrimary,
-  },
-  resultRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderColor: theme.colors.border,
-    paddingVertical: theme.spacing(1.25),
-  },
-  resultLabel: {
-    color: theme.colors.textMuted,
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  resultValue: {
-    color: theme.colors.textPrimary,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  chordsHeading: {
-    ...theme.typography.headline,
-    fontSize: 18,
-    color: theme.colors.accent,
-    marginTop: theme.spacing(1.5),
-  },
-  chordList: {
-    gap: theme.spacing(1),
-  },
-  chordRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing(1.5),
-    padding: theme.spacing(1.25),
-    borderRadius: theme.radii.md,
-    backgroundColor: theme.colors.surfaceAlt,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  chordTimeBadge: {
-    backgroundColor: theme.colors.primarySoft,
-    borderRadius: theme.radii.sm,
-    paddingHorizontal: theme.spacing(1),
-    paddingVertical: theme.spacing(0.5),
-  },
-  chordTime: {
-    color: theme.colors.primary,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  chordInfo: {
-    flex: 1,
-  },
-  chordName: {
-    color: theme.colors.textPrimary,
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  chordMeta: {
-    color: theme.colors.textSecondary,
-    fontSize: 14,
-    marginTop: 2,
-  },
+  screen: { flex: 1, backgroundColor: theme.colors.background },
+  content: { padding: theme.spacing(3), paddingBottom: theme.spacing(8), gap: theme.spacing(3) },
+  headerCard: { backgroundColor: theme.colors.surface, borderRadius: theme.radii.lg, padding: theme.spacing(3), borderWidth: 1, borderColor: theme.colors.border, flexDirection: 'row', alignItems: 'center', gap: theme.spacing(3), ...theme.shadows.card },
+  headerTextGroup: { flex: 1, gap: theme.spacing(1.5) },
+  headerTitle: { ...theme.typography.title, fontSize: 30, color: theme.colors.textPrimary },
+  headerSubtitle: { ...theme.typography.body, color: theme.colors.textSecondary, lineHeight: 24 },
+  heroTags: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing(1) },
+  heroTag: { backgroundColor: theme.colors.accentSoft, borderRadius: 999, paddingHorizontal: theme.spacing(1.5), paddingVertical: theme.spacing(0.5) },
+  heroTagText: { color: theme.colors.accent, fontSize: 12, fontWeight: '600', letterSpacing: 0.4 },
+  heroGraphic: { width: 120, height: 120, opacity: 0.75 },
+  panel: { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.radii.lg, borderWidth: 1, borderColor: theme.colors.border, padding: theme.spacing(3), gap: theme.spacing(2) },
+  panelTitle: { ...theme.typography.headline, color: theme.colors.textPrimary },
+  panelBody: { ...theme.typography.body, color: theme.colors.textSecondary, lineHeight: 23 },
+  primaryButton: { backgroundColor: theme.colors.primary, borderRadius: theme.radii.md, paddingVertical: theme.spacing(1.5), alignItems: 'center', ...theme.shadows.soft },
+  primaryButtonDisabled: { opacity: 0.6 },
+  primaryButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  feedbackCard: { borderRadius: theme.radii.md, padding: theme.spacing(1.5), borderWidth: 1, borderColor: theme.colors.border, backgroundColor: theme.colors.surface },
+  feedbackSuccess: { borderColor: theme.colors.success, backgroundColor: 'rgba(52, 211, 153, 0.12)' },
+  feedbackError: { borderColor: theme.colors.danger, backgroundColor: 'rgba(248, 113, 113, 0.12)' },
+  feedbackText: { ...theme.typography.body, color: theme.colors.textPrimary },
+  resultsCard: { backgroundColor: theme.colors.surface, borderRadius: theme.radii.lg, borderWidth: 1, borderColor: theme.colors.border, padding: theme.spacing(3), gap: theme.spacing(2) },
+  resultsTitle: { ...theme.typography.headline, color: theme.colors.textPrimary },
+  resultRow: { flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: theme.colors.border, paddingVertical: theme.spacing(1.25) },
+  resultLabel: { color: theme.colors.textMuted, fontSize: 14, fontWeight: '600' },
+  resultValue: { color: theme.colors.textPrimary, fontSize: 16, fontWeight: '600' },
+  chordsHeading: { ...theme.typography.headline, fontSize: 18, color: theme.colors.accent, marginTop: theme.spacing(1.5) },
+  chordList: { gap: theme.spacing(1) },
+  chordRow: { flexDirection: 'row', alignItems: 'center', gap: theme.spacing(1.5), padding: theme.spacing(1.25), borderRadius: theme.radii.md, backgroundColor: theme.colors.surfaceAlt, borderWidth: 1, borderColor: theme.colors.border },
+  chordTimeBadge: { backgroundColor: theme.colors.primarySoft, borderRadius: theme.radii.sm, paddingHorizontal: theme.spacing(1), paddingVertical: theme.spacing(0.5) },
+  chordTime: { color: theme.colors.primary, fontSize: 13, fontWeight: '600' },
+  chordInfo: { flex: 1 },
+  chordName: { color: theme.colors.textPrimary, fontSize: 16, fontWeight: '700' },
+  chordMeta: { color: theme.colors.textSecondary, fontSize: 14, marginTop: 2 },
 });

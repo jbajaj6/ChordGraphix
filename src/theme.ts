@@ -25,13 +25,7 @@ export const theme = {
     keyBlackPressed: '#6366F1',
   },
   spacing: (factor: number) => factor * 8,
-  radii: {
-    xs: 8,
-    sm: 12,
-    md: 16,
-    lg: 24,
-    xl: 32,
-  },
+  radii: { xs: 8, sm: 12, md: 16, lg: 24, xl: 32 },
   shadows: {
     card: {
       shadowColor: 'rgba(15, 23, 42, 0.55)',
@@ -49,28 +43,10 @@ export const theme = {
     },
   },
   typography: {
-    display: {
-      fontSize: 34,
-      fontWeight: '700' as const,
-      letterSpacing: 0.2,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: '700' as const,
-    },
-    headline: {
-      fontSize: 20,
-      fontWeight: '600' as const,
-    },
-    body: {
-      fontSize: 16,
-      fontWeight: '500' as const,
-      lineHeight: 22,
-    },
-    caption: {
-      fontSize: 13,
-      fontWeight: '500' as const,
-      letterSpacing: 0.4,
-    },
+    display: { fontSize: 34, fontWeight: '700' as const, letterSpacing: 0.2 },
+    title: { fontSize: 24, fontWeight: '700' as const },
+    headline: { fontSize: 20, fontWeight: '600' as const },
+    body: { fontSize: 16, fontWeight: '500' as const, lineHeight: 22 },
+    caption: { fontSize: 13, fontWeight: '500' as const, letterSpacing: 0.4 },
   },
 } as const;

@@ -8,9 +8,9 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { chordPlayer } from './audioPlayer';
-import { detectChordDetailed } from './chordDetection';
-import { theme } from './theme';
+import { chordPlayer } from '../src/audioPlayer';
+import { detectChordDetailed } from '../src/chordDetection';
+import { theme } from '../src/theme';
 
 const WHITE_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'] as const;
 const BLACK_NOTE_DEFS = [
@@ -112,9 +112,7 @@ export default function Piano() {
     }
 
     setPressedKeys((prev) =>
-      prev.includes(uniqueKey)
-        ? prev.filter((k) => k !== uniqueKey)
-        : [...prev, uniqueKey],
+      prev.includes(uniqueKey) ? prev.filter((k) => k !== uniqueKey) : [...prev, uniqueKey],
     );
   };
 
@@ -153,7 +151,6 @@ export default function Piano() {
 
   const handlePress = (key: PianoKey) => {
     if (lastInteractionWasTouch.current) {
-      // The touch handler already toggled the key; reset for future mouse interactions.
       lastInteractionWasTouch.current = false;
       return;
     }
@@ -223,10 +220,7 @@ export default function Piano() {
                   key={key.uniqueKey}
                   style={[
                     styles.blackKey,
-                    {
-                      left: leftPosition,
-                      width: BLACK_KEY_WIDTH,
-                    },
+                    { left: leftPosition, width: BLACK_KEY_WIDTH },
                     isPressed && styles.blackKeyPressed,
                   ]}
                   onTouchStart={handleTouchStart(key)}
@@ -291,180 +285,31 @@ export default function Piano() {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  scrollContent: {
-    paddingBottom: theme.spacing(6),
-    paddingHorizontal: theme.spacing(3),
-    paddingTop: theme.spacing(6),
-    gap: theme.spacing(4),
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    gap: theme.spacing(2),
-  },
-  title: {
-    ...theme.typography.title,
-    fontSize: 28,
-    color: theme.colors.textPrimary,
-  },
-  subtitle: {
-    color: theme.colors.textSecondary,
-    fontSize: 15,
-    marginTop: theme.spacing(1),
-    lineHeight: 22,
-  },
-  badge: {
-    backgroundColor: theme.colors.accentSoft,
-    paddingHorizontal: theme.spacing(1.5),
-    paddingVertical: theme.spacing(0.75),
-    borderRadius: 999,
-  },
-  badgeText: {
-    color: theme.colors.accent,
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  keyboardPanel: {
-    padding: theme.spacing(2),
-    borderRadius: theme.radii.md,
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-    alignItems: 'center',
-  },
-  keyboardContainer: {
-    position: 'relative',
-    marginBottom: theme.spacing(2),
-    alignItems: 'center',
-    overflow: 'visible',
-  },
-  whiteKeysRow: {
-    flexDirection: 'row',
-    borderWidth: 2,
-    borderColor: '#333',
-    borderRadius: 8,
-    overflow: 'hidden',
-    backgroundColor: '#f0f0f0',
-  },
-  whiteKey: {
-    height: 200,
-    backgroundColor: '#fff',
-    borderRightWidth: 1,
-    borderRightColor: '#ddd',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  whiteKeyPressed: {
-    backgroundColor: '#e8f4fd',
-    borderColor: '#007AFF',
-    borderWidth: 2,
-  },
-  whiteKeyLabel: {
-    color: '#333',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  blackKeysRow: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    height: 130,
-    zIndex: 1,
-  },
-  blackKey: {
-    position: 'absolute',
-    width: BLACK_KEY_WIDTH,
-    height: 130,
-    backgroundColor: '#1a1a1a',
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    paddingBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
-    borderWidth: 1,
-    borderColor: '#000',
-  },
-  blackKeyPressed: {
-    backgroundColor: '#007AFF',
-    borderColor: '#0056b3',
-  },
-  blackKeyLabel: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  controlsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: theme.spacing(2),
-  },
-  primaryButton: {
-    backgroundColor: theme.colors.primary,
-    paddingHorizontal: theme.spacing(2.5),
-    paddingVertical: theme.spacing(1.5),
-    borderRadius: 999,
-    ...theme.shadows.soft,
-  },
-  primaryButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  secondaryButton: {
-    backgroundColor: theme.colors.surfaceAlt,
-    borderRadius: 999,
-    paddingHorizontal: theme.spacing(2.5),
-    paddingVertical: theme.spacing(1.5),
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-  },
-  secondaryButtonText: {
-    color: theme.colors.accent,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  surfaceButton: {
-    backgroundColor: 'transparent',
-    borderRadius: 999,
-    paddingHorizontal: theme.spacing(2.5),
-    paddingVertical: theme.spacing(1.5),
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  surfaceButtonText: {
-    color: theme.colors.textMuted,
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  statusCard: {
-    backgroundColor: theme.colors.surfaceAlt,
-    borderRadius: theme.radii.md,
-    padding: theme.spacing(2.5),
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    gap: theme.spacing(1.5),
-  },
-  statusTitle: {
-    ...theme.typography.headline,
-    color: theme.colors.textPrimary,
-  },
-  statusBody: {
-    ...theme.typography.body,
-    color: theme.colors.textSecondary,
-    lineHeight: 24,
-  },
+  screen: { flex: 1, backgroundColor: theme.colors.background },
+  scrollContent: { paddingBottom: theme.spacing(6), paddingHorizontal: theme.spacing(3), paddingTop: theme.spacing(6), gap: theme.spacing(4) },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: theme.spacing(2) },
+  title: { ...theme.typography.title, fontSize: 28, color: theme.colors.textPrimary },
+  subtitle: { color: theme.colors.textSecondary, fontSize: 15, marginTop: theme.spacing(1), lineHeight: 22 },
+  badge: { backgroundColor: theme.colors.accentSoft, paddingHorizontal: theme.spacing(1.5), paddingVertical: theme.spacing(0.75), borderRadius: 999 },
+  badgeText: { color: theme.colors.accent, fontSize: 13, fontWeight: '600' },
+  keyboardPanel: { padding: theme.spacing(2), borderRadius: theme.radii.md, backgroundColor: 'transparent', borderWidth: 0, alignItems: 'center' },
+  keyboardContainer: { position: 'relative', marginBottom: theme.spacing(2), alignItems: 'center', overflow: 'visible' },
+  whiteKeysRow: { flexDirection: 'row', borderWidth: 2, borderColor: '#333', borderRadius: 8, overflow: 'hidden', backgroundColor: '#f0f0f0' },
+  whiteKey: { height: 200, backgroundColor: '#fff', borderRightWidth: 1, borderRightColor: '#ddd', justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 15, shadowColor: '#000', shadowOffset: { width: 1, height: 2 }, shadowOpacity: 0.1, shadowRadius: 2 },
+  whiteKeyPressed: { backgroundColor: '#e8f4fd', borderColor: '#007AFF', borderWidth: 2 },
+  whiteKeyLabel: { color: '#333', fontSize: 18, fontWeight: 'bold' },
+  blackKeysRow: { position: 'absolute', top: 0, left: 0, height: 130, zIndex: 1 },
+  blackKey: { position: 'absolute', width: 36, height: 130, backgroundColor: '#1a1a1a', borderTopLeftRadius: 4, borderTopRightRadius: 4, justifyContent: 'flex-end', alignItems: 'center', paddingBottom: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.5, shadowRadius: 4, elevation: 5, borderWidth: 1, borderColor: '#000' },
+  blackKeyPressed: { backgroundColor: '#007AFF', borderColor: '#0056b3' },
+  blackKeyLabel: { fontSize: 12, fontWeight: 'bold', color: '#fff' },
+  controlsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: theme.spacing(2) },
+  primaryButton: { backgroundColor: theme.colors.primary, paddingHorizontal: theme.spacing(2.5), paddingVertical: theme.spacing(1.5), borderRadius: 999, ...theme.shadows.soft },
+  primaryButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
+  secondaryButton: { backgroundColor: theme.colors.surfaceAlt, borderRadius: 999, paddingHorizontal: theme.spacing(2.5), paddingVertical: theme.spacing(1.5), borderWidth: 1, borderColor: theme.colors.primary },
+  secondaryButtonText: { color: theme.colors.accent, fontSize: 16, fontWeight: '600' },
+  surfaceButton: { backgroundColor: 'transparent', borderRadius: 999, paddingHorizontal: theme.spacing(2.5), paddingVertical: theme.spacing(1.5), borderWidth: 1, borderColor: theme.colors.border },
+  surfaceButtonText: { color: theme.colors.textMuted, fontSize: 15, fontWeight: '600' },
+  statusCard: { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.radii.md, padding: theme.spacing(2.5), borderWidth: 1, borderColor: theme.colors.border, gap: theme.spacing(1.5) },
+  statusTitle: { ...theme.typography.headline, color: theme.colors.textPrimary },
+  statusBody: { ...theme.typography.body, color: theme.colors.textSecondary, lineHeight: 24 },
 });
