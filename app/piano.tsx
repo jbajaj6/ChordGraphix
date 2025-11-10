@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-import { detectChordDetailed } from './chordDetection';
 import { chordPlayer } from './audioPlayer';
+import { detectChordDetailed } from './chordDetection';
 
 interface Key {
   note: string;
@@ -33,11 +33,19 @@ export default function Piano() {
     { note: 'A#', isBlack: true, position: 12 }, // Between A and B (2nd octave)
   ];
 
-  const toggleKey = async (uniqueKey: string, note: string) => {
+  const toggleKey = async (uniqueKey: string, note: string, keyIndex: number) => {
     console.log('Key pressed:', note, 'unique:', uniqueKey);
     
+    // Determine octave: first 7 keys are octave 4, next 7 are octave 5
+    const octave = keyIndex < 7 ? 4 : 5;
+    const fullNote = `${note}${octave}`;
+    
     // Play the note sound
-    await chordPlayer.playNote(`${note}4`, 0.5);
+    try {
+      await chordPlayer.playNote(fullNote, 0.5);
+    } catch (error) {
+      console.error('Error playing note:', error);
+    }
     
     if (pressedKeys.includes(uniqueKey)) {
       setPressedKeys(pressedKeys.filter(k => k !== uniqueKey));
@@ -99,12 +107,21 @@ export default function Piano() {
 
   const playCurrentChord = async () => {
     const noteNames = getPressedNoteNames();
-    if (noteNames.length > 0) {
-      await chordPlayer.playChord(noteNames, 2);
-    } else {
+    if (noteNames.length === 0) {
       Alert.alert('No Keys Pressed', 'Please press some keys first.');
+      return;
+    }
+
+    try {
+      // Play chord with octave 4 (middle octave)
+      const notesWithOctave = noteNames.map(note => `${note}4`);
+      await chordPlayer.playChord(notesWithOctave, 1.5);
+    } catch (error) {
+      console.error('Error playing chord:', error);
+      Alert.alert('Error', 'Failed to play chord.');
     }
   };
+
 
   return (
     <View style={styles.container}>
@@ -137,7 +154,7 @@ export default function Piano() {
                   },
                   pressedKeys.includes(uniqueKey) && styles.blackKeyPressed
                 ]}
-                onPress={() => toggleKey(uniqueKey, key.note)}
+                onPress={() => toggleKey(uniqueKey, key.note, key.position)}
               >
                 <Text style={styles.blackKeyLabel}>{displayNote}</Text>
               </Pressable>
@@ -162,7 +179,7 @@ export default function Piano() {
                   styles.whiteKey,
                   pressedKeys.includes(uniqueKey) && styles.whiteKeyPressed
                 ]}
-                onPress={() => toggleKey(uniqueKey, note)}
+                onPress={() => toggleKey(uniqueKey, note, index)}
               >
                 <Text style={styles.whiteKeyLabel}>{displayNote}</Text>
               </Pressable>
@@ -176,8 +193,8 @@ export default function Piano() {
       </Pressable>
 
       <Pressable style={[styles.checkButton, styles.playButton]} onPress={playCurrentChord}>
-          <Text style={styles.buttonText}>🔊 Play Chord</Text>
-        </Pressable>
+        <Text style={styles.buttonText}>🔊 Play Chord</Text>
+      </Pressable>
 
       {result ? (
         <Text style={styles.result}>{result}</Text>
@@ -298,6 +315,7 @@ const styles = StyleSheet.create({
   playButton: {
     backgroundColor: '#007AFF',
     shadowColor: '#007AFF',
+    marginBottom: 10,
   },
   buttonText: {
     color: '#fff',
