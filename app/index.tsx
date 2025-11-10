@@ -1,9 +1,7 @@
-// app/index.tsx
 import { Link } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { theme } from '../src/theme';
 
-// Always return a plain object for any style prop
 const sx = (...parts: any[]) => StyleSheet.flatten(parts.filter(Boolean));
 
 const PaletteSwatch = ({ color, label }: { color: string; label: string }) => (
@@ -17,15 +15,34 @@ export default function Index() {
   const { width } = useWindowDimensions();
   const isCompact = width < 720;
 
+  // Precompute adaptive style groups to keep render clean
+  const heroContainerStyle = sx(styles.hero, isCompact && styles.heroCompact);
+  const heroActionsStyle = sx(styles.heroActions, isCompact && styles.heroActionsCompact);
+  const heroPreviewWrapperStyle = sx(styles.heroPreview, isCompact && styles.heroPreviewCompact);
+  const metricRowStyle = sx(styles.metricRow, isCompact && styles.metricRowCompact);
+  const swatchRowStyle = sx(styles.swatchRow, isCompact && styles.swatchRowCompact);
+  const contentStyle = sx(styles.scrollContent, isCompact && styles.scrollContentCompact);
+  const primaryButtonStyle = sx(
+    styles.primaryButton,
+    isCompact ? styles.heroActionVerticalSpacing : styles.heroActionHorizontalSpacing,
+  );
+  const secondaryButtonStyle = sx(
+    styles.secondaryButton,
+    isCompact ? styles.heroActionVerticalSpacing : styles.heroActionHorizontalSpacing,
+  );
+  const firstMetricCardStyle = sx(
+    styles.metricCard,
+    isCompact ? styles.metricCardCompact : styles.metricCardSpacing,
+  );
+  const secondMetricCardStyle = sx(styles.metricCard, isCompact && styles.metricCardCompact);
+
   return (
     <View style={styles.screen}>
       <ScrollView
-        contentContainerStyle={sx(
-          styles.scrollContent,
-          isCompact && styles.scrollContentCompact,
-        )}
+        contentContainerStyle={contentStyle}
       >
-        <View style={sx(styles.hero, isCompact && styles.heroCompact)}>
+        <View style={heroContainerStyle}>
+          {/* Messaging + primary actions */}
           <View style={styles.heroContent}>
             <Text style={styles.heroBadge}>ChordGraphix</Text>
             <Text style={styles.heroTitle}>Play, detect, and explore chords with ease.</Text>
@@ -34,48 +51,34 @@ export default function Index() {
               voicings instantly, and keep your creative flow in motion.
             </Text>
 
-            <View style={sx(styles.heroActions, isCompact && styles.heroActionsCompact)}>
+            <View style={heroActionsStyle}>
               <Link href="/piano" asChild>
-                <Pressable
-                  style={sx(
-                    styles.primaryButton,
-                    isCompact ? styles.heroActionVerticalSpacing : styles.heroActionHorizontalSpacing,
-                  )}
-                >
+                <Pressable style={primaryButtonStyle}>
                   <Text style={styles.primaryButtonText}>Open Piano Studio</Text>
                 </Pressable>
               </Link>
 
               <Link href="/songAnalyzer" asChild>
-                <Pressable
-                  style={sx(
-                    styles.secondaryButton,
-                    isCompact ? styles.heroActionVerticalSpacing : styles.heroActionHorizontalSpacing,
-                  )}
-                >
+                <Pressable style={secondaryButtonStyle}>
                   <Text style={styles.secondaryButtonText}>Analyze a Song</Text>
                 </Pressable>
               </Link>
             </View>
 
-            <View style={sx(styles.metricRow, isCompact && styles.metricRowCompact)}>
-              <View
-                style={sx(
-                  styles.metricCard,
-                  isCompact ? styles.metricCardCompact : styles.metricCardSpacing,
-                )}
-              >
+            <View style={metricRowStyle}>
+              <View style={firstMetricCardStyle}>
                 <Text style={styles.metricValue}>2</Text>
                 <Text style={styles.metricLabel}>Octaves dynamically sized</Text>
               </View>
-              <View style={sx(styles.metricCard, isCompact && styles.metricCardCompact)}>
+              <View style={secondMetricCardStyle}>
                 <Text style={styles.metricValue}>∞</Text>
                 <Text style={styles.metricLabel}>Chords detected with tonal.js</Text>
               </View>
             </View>
           </View>
 
-          <View style={sx(styles.heroPreview, isCompact && styles.heroPreviewCompact)}>
+          {/* Live preview card */}
+          <View style={heroPreviewWrapperStyle}>
             <View style={styles.previewCard}>
               <Text style={styles.previewTitle}>Session Snapshot</Text>
               <Text style={styles.previewBody}>Pressed: C, E, G</Text>
@@ -113,7 +116,7 @@ export default function Index() {
               • Midnight Navy surfaces with indigo primary and cyan highlights.
               {'\n'}• Muted slate borders and soft glows emphasize active states.
             </Text>
-            <View style={sx(styles.swatchRow, isCompact && styles.swatchRowCompact)}>
+            <View style={swatchRowStyle}>
               <PaletteSwatch color={theme.colors.background} label="Background" />
               <PaletteSwatch color={theme.colors.surface} label="Surface" />
               <PaletteSwatch color={theme.colors.primary} label="Primary" />

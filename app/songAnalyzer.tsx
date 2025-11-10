@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../src/theme';
 
+// Temporary mock analysis flow until the Essentia pipeline lands
 export default function SongAnalyzer() {
   const [analyzing, setAnalyzing] = useState(false);
   const [results, setResults] = useState<any>(null);
