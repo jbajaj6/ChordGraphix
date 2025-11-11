@@ -51,6 +51,7 @@ If you see an "expo: command not found" error when using other tools, prefer the
 1. Launch the app and open the Piano screen.
 2. Tap white or black keys to select notes (keys highlight individually, per octave).
 3. Press "Check Chord" to detect the chord. The app shows the detected chord, alternative interpretations, and the pressed notes.
+4. Click "Analyze a Song" to upload an m4a file and have it parse the chords in the first 30 seconds. 
 
 ## Optional: Run the Flask Backend
 
