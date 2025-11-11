@@ -72,3 +72,7 @@ In `app/piano.tsx`, the local detector is used. You can adapt it to call `http:/
 - `@tonaljs/chord-detect`, `@tonaljs/chord`, `@tonaljs/note`
 - TypeScript
 - (Optional) Flask + Flask-CORS
+
+## AI Usage
+
+We used AI to help us come up with some of the implementation ideas and code for the chord detection and song parsing.
