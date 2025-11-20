@@ -63,6 +63,12 @@ export default function Index() {
                   <Text style={styles.secondaryButtonText}>Analyze a Song</Text>
                 </Pressable>
               </Link>
+
+              <Link href="/chordPractice" asChild>
+                <Pressable style={styles.secondaryButton}>
+                  <Text style={styles.secondaryButtonText}>Practice Chords</Text>
+                </Pressable>
+              </Link>
             </View>
 
             <View style={metricRowStyle}>
