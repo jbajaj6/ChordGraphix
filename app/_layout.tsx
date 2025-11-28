@@ -1,5 +1,10 @@
-import { Stack } from "expo-router";
+import { Slot } from 'expo-router';
+import { ChordColorsProvider } from '../src/ChordColorsContext';
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <ChordColorsProvider>
+      <Slot />
+    </ChordColorsProvider>
+  );
 }

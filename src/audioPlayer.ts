@@ -1,3 +1,5 @@
+/*
+
 class ChordPlayer {
   private audioContext: AudioContext | null = null;
   private initialized = false;
@@ -95,7 +97,9 @@ class ChordPlayer {
 
 export const chordPlayer = new ChordPlayer();
 
-/*
+*/
+
+
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system/legacy';
 
@@ -300,4 +304,4 @@ class ChordPlayer {
 
 export const chordPlayer = new ChordPlayer();
 
-*/
+

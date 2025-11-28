@@ -92,7 +92,7 @@ export function generateChordChallenge(difficulty: DifficultyLevel = 'beginner')
   const availableTypes = DIFFICULTY_CHORDS[difficulty];
   const randomType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
   const availableRoots = DIFFICULTY_NOTES[difficulty];
-  const randomRoot = ROOT_NOTES[Math.floor(Math.random() * availableRoots.length)];
+  const randomRoot = availableRoots[Math.floor(Math.random() * availableRoots.length)];
   
   const intervals = CHORD_INTERVALS[randomType];
   const notes = intervalsToNotes(randomRoot, intervals);

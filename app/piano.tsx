@@ -11,6 +11,7 @@ import {
 import { chordPlayer } from '../src/audioPlayer';
 import { detectChordDetailed } from '../src/chordDetection';
 import { theme } from '../src/theme';
+import { useChordColors, ChordName } from '../src/ChordColorsContext';
 
 const WHITE_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'] as const;
 const BLACK_NOTE_DEFS = [
@@ -54,6 +55,7 @@ const toSubscript = (value: number) =>
 export default function Piano() {
   const { width } = useWindowDimensions();
   const [pressedKeys, setPressedKeys] = useState<string[]>([]);
+  const { getChordColor } = useChordColors();
   const [result, setResult] = useState<string>('Tap keys to preview their tone and build a chord.');
 
   const isCompact = width < 620;
@@ -114,6 +116,15 @@ export default function Piano() {
     setPressedKeys((prev) =>
       prev.includes(uniqueKey) ? prev.filter((k) => k !== uniqueKey) : [...prev, uniqueKey],
     );
+  };
+
+  //gets preset color for the chord
+  const getChordDisplayColor = (chordName: string): string => {
+    try {
+      return getChordColor(chordName as ChordName);
+    } catch {
+      return theme.colors.accent; // Fallback color
+    }
   };
 
   const getPressedNoteNames = (): string[] =>
@@ -180,6 +191,8 @@ export default function Piano() {
       setResult('Error detecting chord. Please try again.');
     }
   };
+
+  const chordColor = result ? getChordDisplayColor(result) : theme.colors.accent;
 
   const playCurrentChord = async () => {
     const notesWithOctave = getPressedNotesWithOctave();
@@ -278,7 +291,7 @@ export default function Piano() {
 
       <View style={styles.statusCard}>
         <Text style={styles.statusTitle}>Session Status</Text>
-        <Text style={styles.statusBody}>{result}</Text>
+        <Text style={[styles.statusBody, {color : chordColor}]}>{result}</Text>
       </View>
     </ScrollView>
   );
@@ -311,5 +324,5 @@ const styles = StyleSheet.create({
   surfaceButtonText: { color: theme.colors.textMuted, fontSize: 15, fontWeight: '600' },
   statusCard: { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.radii.md, padding: theme.spacing(2.5), borderWidth: 1, borderColor: theme.colors.border, gap: theme.spacing(1.5) },
   statusTitle: { ...theme.typography.headline, color: theme.colors.textPrimary },
-  statusBody: { ...theme.typography.body, color: theme.colors.textSecondary, lineHeight: 24 },
+  statusBody: { ...theme.typography.body, lineHeight: 24 },
 });

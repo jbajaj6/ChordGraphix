@@ -8,6 +8,7 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
+import { Link } from 'expo-router';
 import { chordPlayer } from '../src/audioPlayer';
 import { theme } from '../src/theme';
 import {
@@ -17,6 +18,7 @@ import {
   generateChordChallenge,
   getChordHint,
 } from '../src/chordPractice';
+import { useChordColors, ChordName } from '../src/ChordColorsContext';
 
 const WHITE_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'] as const;
 const BLACK_NOTE_DEFS = [
@@ -27,8 +29,33 @@ const BLACK_NOTE_DEFS = [
   { note: 'A#', leftIndex: 5 },
 ] as const;
 const BASE_OCTAVE = 4;
-const WHITE_KEY_WIDTH = 60;
-const BLACK_KEY_WIDTH = 36;
+// Dynamic sizing based on screen width
+const getKeyDimensions = (width: number, isCompact: boolean) => {
+    const isTablet = width >= 768; // iPad and larger
+    
+    if (isTablet) {
+      return {
+        whiteKeyWidth: 90,
+        blackKeyWidth: 54,
+        whiteKeyHeight: 280,
+        blackKeyHeight: 180,
+      };
+    } else if (!isCompact) {
+      return {
+        whiteKeyWidth: 60,
+        blackKeyWidth: 36,
+        whiteKeyHeight: 200,
+        blackKeyHeight: 130,
+      };
+    } else {
+      return {
+        whiteKeyWidth: 50,
+        blackKeyWidth: 30,
+        whiteKeyHeight: 180,
+        blackKeyHeight: 120,
+      };
+    }
+};
 
 type PianoKey = {
   note: string;
@@ -51,6 +78,7 @@ const toSubscript = (value: number) =>
 
 export default function ChordPractice() {
   const { width } = useWindowDimensions();
+  const { getChordColor } = useChordColors();
   const [pressedKeys, setPressedKeys] = useState<string[]>([]);
   const [result, setResult] = useState<string>('Tap keys to preview their tone and build a chord.');
   const [currentChallenge, setCurrentChallenge] = useState<ChordChallenge | null>(null);
@@ -62,8 +90,12 @@ export default function ChordPractice() {
   const [streak, setStreak] = useState(0);
 
   const isCompact = width < 620;
+  const isTablet = width >= 768;
   const octaveCount = isCompact ? 1 : 2;
-  const keyboardWidth = WHITE_KEY_WIDTH * WHITE_NOTES.length * octaveCount;
+  
+  const keyDimensions = getKeyDimensions(width, isCompact);
+  const { whiteKeyWidth, blackKeyWidth, whiteKeyHeight, blackKeyHeight } = keyDimensions;
+  const keyboardWidth = whiteKeyWidth * WHITE_NOTES.length * octaveCount;
 
   const whiteKeys = useMemo<PianoKey[]>(() => {
     const keys: PianoKey[] = [];
@@ -92,6 +124,15 @@ export default function ChordPractice() {
     }
     return keys;
   }, [octaveCount]);
+
+  //gets preset color for the chord
+  const getChordDisplayColor = (chordName: string): string => {
+    try {
+      return getChordColor(chordName as ChordName);
+    } catch {
+      return theme.colors.accent; // Fallback color
+    }
+  };
 
   const keyLookup = useMemo(() => {
     const map = new Map<string, PianoKey>();
@@ -222,8 +263,275 @@ export default function ChordPractice() {
 
   const accuracyRate = attempts > 0 ? Math.round((score / attempts) * 100) : 0;
 
+  const challengeColor = currentChallenge 
+  ? getChordDisplayColor(currentChallenge.displayName)
+  : theme.colors.accent;
+
+  // Use different layouts for tablet vs mobile
+  if (isTablet) {
+    return (
+      <View style={styles.screen}>
+        {/* Navigation Bar */}
+        <View style={styles.nav}>
+          <Link href="/myChords" asChild>
+            <Pressable style={styles.navItem}>
+              <View style={styles.chordGridIcon}>
+                <View style={styles.chordDot} />
+                <View style={styles.chordDot} />
+                <View style={styles.chordDot} />
+              </View>
+              <Text style={styles.navLabel}>My Chords</Text>
+            </Pressable>
+          </Link>
+
+          <Pressable style={[styles.navItem, styles.navItemActive]}>
+            <View style={styles.pianoIcon}>
+              <View style={styles.pianoKeyIcon} />
+              <View style={styles.pianoKeyIcon} />
+              <View style={styles.pianoKeyIcon} />
+            </View>
+            <Text style={styles.navLabel}>Chord Practice</Text>
+          </Pressable>
+
+          <Link href="/" asChild>
+            <Pressable style={styles.navItem}>
+              <View style={styles.profileIcon}>
+                <View style={styles.profileIconInner} />
+              </View>
+              <Text style={styles.navLabel}>Home</Text>
+            </Pressable>
+          </Link>
+        </View>
+
+        <View style={styles.tabletContainer}>
+          {/* Top section with controls */}
+          <ScrollView style={styles.tabletTopSection} contentContainerStyle={styles.tabletScrollContent}>
+            {/* Header */}
+            <View style={styles.headerRow}>
+              <View>
+                <Text style={styles.title}>Chord Practice</Text>
+                <Text style={styles.subtitle}>
+                  Master your chord recognition with randomized challenges
+                </Text>
+              </View>
+            </View>
+
+            {/* Score Display */}
+            <View style={styles.scoreCard}>
+              <View style={styles.scoreRow}>
+                <View style={styles.scoreItem}>
+                  <Text style={styles.scoreValue}>{score}</Text>
+                  <Text style={styles.scoreLabel}>Correct</Text>
+                </View>
+                <View style={styles.scoreItem}>
+                  <Text style={styles.scoreValue}>{attempts}</Text>
+                  <Text style={styles.scoreLabel}>Attempts</Text>
+                </View>
+                <View style={styles.scoreItem}>
+                  <Text style={styles.scoreValue}>{accuracyRate}%</Text>
+                  <Text style={styles.scoreLabel}>Accuracy</Text>
+                </View>
+                <View style={styles.scoreItem}>
+                  <Text style={styles.scoreValue}>{streak}</Text>
+                  <Text style={styles.scoreLabel}>Streak</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Difficulty Selection */}
+            <View style={styles.difficultyCard}>
+              <Text style={styles.difficultyTitle}>Difficulty</Text>
+              <View style={styles.difficultyButtons}>
+                {(['beginner', 'intermediate', 'advanced'] as DifficultyLevel[]).map((level) => (
+                  <Pressable
+                    key={level}
+                    style={[
+                      styles.difficultyButton,
+                      difficulty === level && styles.difficultyButtonActive,
+                    ]}
+                    onPress={() => {
+                      setDifficulty(level);
+                      setScore(0);
+                      setAttempts(0);
+                      setStreak(0);
+                      setCurrentChallenge(null);
+                      setFeedback(`Difficulty set to ${level}. Start a new challenge!`);
+                    }}
+                  >
+                    <Text
+                      style={[
+                        styles.difficultyButtonText,
+                        difficulty === level && styles.difficultyButtonTextActive,
+                      ]}
+                    >
+                      {level.charAt(0).toUpperCase() + level.slice(1)}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            </View>
+
+            {/* Challenge Display */}
+            {currentChallenge && (
+              <View style={[styles.challengeCard, { borderColor: challengeColor }]}>
+                <Text style={styles.challengeTitle}>Current Challenge</Text>
+                <Text style={[styles.challengeChord, { color: challengeColor }]}>
+                  {currentChallenge.displayName}
+                </Text>
+                {showHint && (
+                  <Text style={styles.challengeNotes}>
+                      Expected notes: {currentChallenge.notes.join(', ')}
+                  </Text>
+                )}
+              </View>
+            )}
+
+            {/* Controls */}
+            <View style={styles.controlsRow}>
+              <Pressable 
+                style={styles.primaryButton} 
+                onPress={startNewChallenge}
+              >
+                <Text style={styles.primaryButtonText}>
+                  {currentChallenge ? 'Next Challenge' : 'Start Practice'}
+                </Text>
+              </Pressable>
+              
+              {currentChallenge && (
+                <>
+                  <Pressable style={styles.secondaryButton} onPress={checkAnswer}>
+                    <Text style={styles.secondaryButtonText}>Check Answer</Text>
+                  </Pressable>
+                  
+                  <Pressable style={styles.surfaceButton} onPress={playTargetChord}>
+                    <Text style={styles.surfaceButtonText}>Hear Target</Text>
+                  </Pressable>
+
+                  <Pressable style={styles.secondaryButton} onPress={playCurrentChord}>
+                      <Text style={styles.secondaryButtonText}>Play Selection</Text>
+                  </Pressable>
+                  
+                  <Pressable 
+                    style={styles.surfaceButton} 
+                    onPress={() => setShowHint(!showHint)}
+                  >
+                    <Text style={styles.surfaceButtonText}>
+                      {showHint ? 'Hide Hint' : 'Show Hint'}
+                    </Text>
+                  </Pressable>
+                </>
+              )}
+              
+              <Pressable
+                style={styles.surfaceButton}
+                onPress={() => {
+                  setPressedKeys([]);
+                }}
+              >
+                <Text style={styles.surfaceButtonText}>Clear Keys</Text>
+              </Pressable>
+            </View>
+
+            {/* Feedback */}
+            <View style={styles.feedbackCard}>
+              <Text style={styles.feedbackTitle}>Feedback</Text>
+              <Text style={styles.feedbackBody}>{feedback}</Text>
+            </View>
+          </ScrollView>
+
+          {/* Bottom section with piano */}
+          <View style={styles.tabletPianoSection}>
+            <View style={styles.keyboardPanel}>
+              <View style={[styles.keyboardContainer, { width: keyboardWidth }]}>
+                <View style={[styles.blackKeysRow, { width: keyboardWidth, height: blackKeyHeight }]} pointerEvents="box-none">
+                  {blackKeys.map((key) => {
+                    const leftPosition = (key.position + 1) * whiteKeyWidth - blackKeyWidth / 2;
+                    const isPressed = pressedKeys.includes(key.uniqueKey);
+                    return (
+                      <Pressable
+                        key={key.uniqueKey}
+                        style={[
+                          styles.blackKey,
+                          { left: leftPosition, width: blackKeyWidth, height: blackKeyHeight },
+                          isPressed && { backgroundColor: challengeColor },
+                          isPressed && styles.blackKeyPressed,
+                        ]}
+                        onTouchStart={handleTouchStart(key)}
+                        onTouchEnd={handleTouchEnd}
+                        onTouchCancel={handleTouchEnd}
+                        onPress={() => handlePress(key)}
+                      >
+                        <Text style={styles.blackKeyLabel}>{key.displayLabel}</Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+
+                <View style={[styles.whiteKeysRow, { width: keyboardWidth }]}>
+                  {whiteKeys.map((key) => {
+                    const isPressed = pressedKeys.includes(key.uniqueKey);
+                    return (
+                      <Pressable
+                        key={key.uniqueKey}
+                        style={[
+                          styles.whiteKey,
+                          { width: whiteKeyWidth, height: whiteKeyHeight },
+                          isPressed && { backgroundColor: challengeColor },
+                          isPressed && styles.whiteKeyPressed,
+                        ]}
+                        onTouchStart={handleTouchStart(key)}
+                        onTouchEnd={handleTouchEnd}
+                        onTouchCancel={handleTouchEnd}
+                        onPress={() => handlePress(key)}
+                      >
+                        <Text style={styles.whiteKeyLabel}>{key.displayLabel}</Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
+
+  // Mobile layout (original)
   return (
     <ScrollView contentContainerStyle={styles.scrollContent} style={styles.screen}>
+      {/* Navigation Bar */}
+      <View style={styles.nav}>
+        <Link href="/myChords" asChild>
+          <Pressable style={styles.navItem}>
+            <View style={styles.chordGridIcon}>
+              <View style={styles.chordDot} />
+              <View style={styles.chordDot} />
+              <View style={styles.chordDot} />
+            </View>
+            <Text style={styles.navLabel}>My Chords</Text>
+          </Pressable>
+        </Link>
+
+        <Pressable style={[styles.navItem, styles.navItemActive]}>
+          <View style={styles.pianoIcon}>
+            <View style={styles.pianoKeyIcon} />
+            <View style={styles.pianoKeyIcon} />
+            <View style={styles.pianoKeyIcon} />
+          </View>
+          <Text style={styles.navLabel}>Chord Practice</Text>
+        </Pressable>
+
+        <Link href="/" asChild>
+          <Pressable style={styles.navItem}>
+            <View style={styles.profileIcon}>
+              <View style={styles.profileIconInner} />
+            </View>
+            <Text style={styles.navLabel}>Home</Text>
+          </Pressable>
+        </Link>
+      </View>
+
       {/* Header */}
       <View style={styles.headerRow}>
         <View>
@@ -291,9 +599,11 @@ export default function ChordPractice() {
 
       {/* Challenge Display */}
       {currentChallenge && (
-        <View style={styles.challengeCard}>
+        <View style={[styles.challengeCard, { borderColor: challengeColor }]}>
           <Text style={styles.challengeTitle}>Current Challenge</Text>
-          <Text style={styles.challengeChord}>{currentChallenge.displayName}</Text>
+          <Text style={[styles.challengeChord, { color: challengeColor }]}>
+            {currentChallenge.displayName}
+          </Text>
           {showHint && (
             <Text style={styles.challengeNotes}>
                 Expected notes: {currentChallenge.notes.join(', ')}
@@ -308,14 +618,15 @@ export default function ChordPractice() {
         <View style={[styles.keyboardContainer, { width: keyboardWidth }]}>
           <View style={[styles.blackKeysRow, { width: keyboardWidth }]} pointerEvents="box-none">
             {blackKeys.map((key) => {
-              const leftPosition = (key.position + 1) * WHITE_KEY_WIDTH - BLACK_KEY_WIDTH / 2;
+              const leftPosition = (key.position + 1) * whiteKeyWidth - blackKeyWidth / 2;
               const isPressed = pressedKeys.includes(key.uniqueKey);
               return (
                 <Pressable
                   key={key.uniqueKey}
                   style={[
                     styles.blackKey,
-                    { left: leftPosition, width: BLACK_KEY_WIDTH },
+                    { left: leftPosition, width: blackKeyWidth, height: blackKeyHeight },
+                    isPressed && { backgroundColor: challengeColor },
                     isPressed && styles.blackKeyPressed,
                   ]}
                   onTouchStart={handleTouchStart(key)}
@@ -337,8 +648,9 @@ export default function ChordPractice() {
                   key={key.uniqueKey}
                   style={[
                     styles.whiteKey,
+                    { width: whiteKeyWidth, height: whiteKeyHeight },
+                    isPressed && { backgroundColor: challengeColor },
                     isPressed && styles.whiteKeyPressed,
-                    { width: WHITE_KEY_WIDTH },
                   ]}
                   onTouchStart={handleTouchStart(key)}
                   onTouchEnd={handleTouchEnd}
@@ -410,6 +722,101 @@ export default function ChordPractice() {
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: theme.colors.background },
+
+  // Tablet layout
+  tabletContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  tabletTopSection: {
+    flex: 1,
+  },
+  tabletScrollContent: {
+    paddingBottom: theme.spacing(3),
+    paddingHorizontal: theme.spacing(4),
+    paddingTop: theme.spacing(3),
+    gap: theme.spacing(3),
+  },
+  tabletPianoSection: {
+    backgroundColor: theme.colors.surfaceAlt,
+    borderTopWidth: 2,
+    borderTopColor: theme.colors.border,
+    paddingVertical: theme.spacing(3),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // Navigation
+  nav: {
+    flexDirection: 'row',
+    backgroundColor: theme.colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+    paddingVertical: theme.spacing(2),
+    paddingHorizontal: theme.spacing(3),
+    justifyContent: 'space-around',
+    marginBottom: theme.spacing(3),
+  },
+  navItem: {
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing(2),
+    paddingVertical: theme.spacing(1),
+    borderRadius: theme.radii.md,
+  },
+  navItemActive: {
+    backgroundColor: theme.colors.surfaceAlt,
+  },
+  navLabel: {
+    fontSize: 12,
+    color: theme.colors.textSecondary,
+    fontWeight: '500',
+    marginTop: 4,
+  },
+  pianoIcon: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  pianoKeyIcon: {
+    width: 6,
+    height: 20,
+    backgroundColor: theme.colors.textPrimary,
+    borderRadius: 2,
+    marginRight: 2,
+  },
+  chordGridIcon: {
+    width: 24,
+    height: 24,
+    borderWidth: 1,
+    borderColor: theme.colors.textPrimary,
+    borderRadius: 4,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 2,
+    marginBottom: 4,
+  },
+  chordDot: {
+    width: 6,
+    height: 6,
+    backgroundColor: theme.colors.textPrimary,
+    borderRadius: 3,
+    marginRight: 2,
+    marginBottom: 2,
+  },
+  profileIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: theme.colors.textPrimary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  profileIconInner: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: theme.colors.textPrimary,
+  },
   scrollContent: { 
     paddingBottom: theme.spacing(6), 
     paddingHorizontal: theme.spacing(3), 
@@ -559,7 +966,6 @@ const styles = StyleSheet.create({
     shadowRadius: 2 
   },
   whiteKeyPressed: { 
-    backgroundColor: '#e8f4fd', 
     borderColor: '#007AFF', 
     borderWidth: 2 
   },
@@ -594,7 +1000,6 @@ const styles = StyleSheet.create({
     borderColor: '#000' 
   },
   blackKeyPressed: { 
-    backgroundColor: '#007AFF', 
     borderColor: '#0056b3' 
   },
   blackKeyLabel: { 

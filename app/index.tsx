@@ -4,147 +4,169 @@ import { theme } from '../src/theme';
 
 const sx = (...parts: any[]) => StyleSheet.flatten(parts.filter(Boolean));
 
-const PaletteSwatch = ({ color, label }: { color: string; label: string }) => (
-  <View style={styles.swatchItem}>
-    <View style={sx(styles.swatch, { backgroundColor: color })} />
-    <Text style={styles.swatchLabel}>{label}</Text>
-  </View>
-);
-
 export default function Index() {
   const { width } = useWindowDimensions();
   const isCompact = width < 720;
 
-  // Precompute adaptive style groups to keep render clean
-  const heroContainerStyle = sx(styles.hero, isCompact && styles.heroCompact);
-  const heroActionsStyle = sx(styles.heroActions, isCompact && styles.heroActionsCompact);
-  const heroPreviewWrapperStyle = sx(styles.heroPreview, isCompact && styles.heroPreviewCompact);
-  const metricRowStyle = sx(styles.metricRow, isCompact && styles.metricRowCompact);
-  const swatchRowStyle = sx(styles.swatchRow, isCompact && styles.swatchRowCompact);
-  const contentStyle = sx(styles.scrollContent, isCompact && styles.scrollContentCompact);
-  const primaryButtonStyle = sx(
-    styles.primaryButton,
-    isCompact ? styles.heroActionVerticalSpacing : styles.heroActionHorizontalSpacing,
-  );
-  const secondaryButtonStyle = sx(
-    styles.secondaryButton,
-    isCompact ? styles.heroActionVerticalSpacing : styles.heroActionHorizontalSpacing,
-  );
-  const firstMetricCardStyle = sx(
-    styles.metricCard,
-    isCompact ? styles.metricCardCompact : styles.metricCardSpacing,
-  );
-  const secondMetricCardStyle = sx(styles.metricCard, isCompact && styles.metricCardCompact);
+  // Sample data - replace with actual data from your app state
+  const userName = "Eloise";
+  const mySongs = [
+    { title: "Sign of the Times", artist: "Harry Styles" },
+    { title: "First Step (Interstellar)", artist: "Hans Zimmer" },
+    { title: "Best", artist: "Gracie Abrams" },
+    { title: "Romantic Flight (How to Train Your Dragon)", artist: "John Powell" },
+    { title: "Bohemian Rhapsody", artist: "Queen" },
+    { title: "The Greatest", artist: "Lana Del Rey" },
+    { title: "The Light of the Seven (Game of Thrones)", artist: "Ramin Djawadi" },
+    { title: "The Imitation Game", artist: "Alexandre Desplat" },
+    { title: "Halley's Comet", artist: "Billie Eilish" },
+    { title: "Hotel California", artist: "Eagles" },
+  ];
+
+  // Practice history - sample calendar data (true = practiced that day)
+  const practiceCalendar = [
+    [false, true, true, false, false, true, false], // Week 1
+    [false, false, false, true, true, false, false], // Week 2
+    [true, true, false, true, false, false, true],   // Week 3
+    [false, false, true, true, false, false, true],  // Week 4
+  ];
+
+  const chordStats = {
+    bestChordPracticeScore: 24,
+    bestSongPracticeScore: 15,
+    favoriteKey: "C Minor"
+  };
+
+  const containerStyle = sx(styles.container, isCompact && styles.containerCompact);
+  const cardsRowStyle = sx(styles.cardsRow, isCompact && styles.cardsRowCompact);
 
   return (
     <View style={styles.screen}>
-      <ScrollView
-        contentContainerStyle={contentStyle}
-      >
-        <View style={heroContainerStyle}>
-          {/* Messaging + primary actions */}
-          <View style={styles.heroContent}>
-            <Text style={styles.heroBadge}>ChordGraphix</Text>
-            <Text style={styles.heroTitle}>Play, detect, and explore chords with ease.</Text>
-            <Text style={styles.heroSubtitle}>
-              A focused toolkit for songwriters: visualize two vibrant piano octaves, confirm your
-              voicings instantly, and keep your creative flow in motion.
-            </Text>
+      {/* Navigation Bar */}
+      <View style={styles.nav}>
+        {/*
+        <Link href="/songPractice" asChild>
+          <Pressable style={styles.navItem}>
+            <Text style={styles.navIcon}>♪</Text>
+            <Text style={styles.navLabel}>Song Practice</Text>
+          </Pressable>
+        </Link>
+        */}
 
-            <View style={heroActionsStyle}>
-              <Link href="/piano" asChild>
-                <Pressable style={primaryButtonStyle}>
-                  <Text style={styles.primaryButtonText}>Open Piano Studio</Text>
-                </Pressable>
-              </Link>
-
-              <Link href="/songAnalyzer" asChild>
-                <Pressable style={secondaryButtonStyle}>
-                  <Text style={styles.secondaryButtonText}>Analyze a Song</Text>
-                </Pressable>
-              </Link>
-
-              <Link href="/chordPractice" asChild>
-                <Pressable style={styles.secondaryButton}>
-                  <Text style={styles.secondaryButtonText}>Practice Chords</Text>
-                </Pressable>
-              </Link>
+        <Link href="/chordPractice" asChild>
+          <Pressable style={styles.navItem}>
+            <View style={styles.pianoIcon}>
+              <View style={styles.pianoKey} />
+              <View style={styles.pianoKey} />
+              <View style={styles.pianoKey} />
             </View>
+            <Text style={styles.navLabel}>Chord Practice</Text>
+          </Pressable>
+        </Link>
 
-            <View style={metricRowStyle}>
-              <View style={firstMetricCardStyle}>
-                <Text style={styles.metricValue}>2</Text>
-                <Text style={styles.metricLabel}>Octaves dynamically sized</Text>
-              </View>
-              <View style={secondMetricCardStyle}>
-                <Text style={styles.metricValue}>∞</Text>
-                <Text style={styles.metricLabel}>Chords detected with tonal.js</Text>
-              </View>
+        <Link href="/songAnalyzer" asChild>
+          <Pressable style={styles.navItem}>
+            <Text style={styles.navIcon}>↑</Text>
+            <Text style={styles.navLabel}>Upload Song</Text>
+          </Pressable>
+        </Link>
+
+        <Link href="/piano" asChild>
+          <Pressable style={styles.navItem}>
+            <Text style={styles.navIcon}>#</Text>
+            <Text style={styles.navLabel}>Piano Studio</Text>
+          </Pressable>
+        </Link>
+
+
+
+          
+        <Link href="/myChords" asChild>
+          <Pressable style={styles.navItem}>
+            <View style={styles.chordGridIcon}>
+              <View style={styles.chordDot} />
+              <View style={styles.chordDot} />
+              <View style={styles.chordDot} />
             </View>
+            <Text style={styles.navLabel}>My Chords</Text>
+          </Pressable>
+        </Link>
+
+        <Pressable style={[styles.navItem, styles.navItemActive]}>
+          <View style={styles.profileIcon}>
+            <View style={styles.profileIconInner} />
           </View>
+          <Text style={styles.navLabel}>Profile</Text>
+        </Pressable>
+      </View>
 
-          {/* Live preview card */}
-          <View style={heroPreviewWrapperStyle}>
-            <View style={styles.previewCard}>
-              <Text style={styles.previewTitle}>Session Snapshot</Text>
-              <Text style={styles.previewBody}>Pressed: C, E, G</Text>
-              <Text style={styles.previewAccent}>Detected: C Major</Text>
-              <View style={styles.previewBadges}>
-                <View style={sx(styles.previewBadge, styles.previewBadgeSpacing)}>
-                  <Text style={styles.previewBadgeText}>Multitouch friendly</Text>
-                </View>
-                <View style={styles.previewBadge}>
-                  <Text style={styles.previewBadgeText}>Live audio feedback</Text>
-                </View>
-              </View>
-            </View>
-          </View>
+      <ScrollView contentContainerStyle={containerStyle}>
+        {/* Welcome Header */}
+        <View style={styles.header}>
+          <Text style={styles.welcomeText}>Welcome back, {userName}!</Text>
+          <Pressable style={styles.settingsButton}>
+            <Text style={styles.settingsIcon}>⚙</Text>
+          </Pressable>
         </View>
 
-        <View style={styles.styleGuideCard}>
-          <Text style={styles.styleGuideTitle}>Style Guide</Text>
-          <Text style={styles.styleGuideSubtitle}>
-            Updated design system for ChordGraphix — consistent across piano and analyzer screens.
-          </Text>
-
-          <View style={styles.styleGuideSection}>
-            <Text style={styles.sectionTitle}>Typography</Text>
-            <Text style={styles.sectionBody}>
-              • Display headers use Inter/SF rounded at 34/700 with subtle tracking.
-              {'\n'}• Headlines use 24/700, body copy 16/500, captions 13/500.
-              {'\n'}• Text contrasts with deep-navy surfaces for comfortable reading.
-            </Text>
+        {/* Cards Row */}
+        <View style={cardsRowStyle}>
+          {/* My Songs Card */}
+          <View style={sx(styles.card, styles.songsCard, isCompact && styles.cardCompact)}>
+            <Text style={styles.cardTitle}>My Songs:</Text>
+            <ScrollView style={styles.songsList} showsVerticalScrollIndicator={false}>
+              {mySongs.map((song, index) => (
+                <View key={index} style={styles.songItem}>
+                  <Text style={styles.heartIcon}>♡</Text>
+                  <View style={styles.songTextContainer}>
+                    <Text style={styles.songTitle}>{song.title}</Text>
+                    <Text style={styles.songArtist}> - {song.artist}</Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
           </View>
 
-          <View style={styles.styleGuideSection}>
-            <Text style={styles.sectionTitle}>Color Palette</Text>
-            <Text style={styles.sectionBody}>
-              • Midnight Navy surfaces with indigo primary and cyan highlights.
-              {'\n'}• Muted slate borders and soft glows emphasize active states.
-            </Text>
-            <View style={swatchRowStyle}>
-              <PaletteSwatch color={theme.colors.background} label="Background" />
-              <PaletteSwatch color={theme.colors.surface} label="Surface" />
-              <PaletteSwatch color={theme.colors.primary} label="Primary" />
-              <PaletteSwatch color={theme.colors.accent} label="Accent" />
+          {/* Right Column */}
+          <View style={sx(styles.rightColumn, isCompact && styles.rightColumnCompact)}>
+            {/* Practice History Card */}
+            <View style={sx(styles.card, styles.practiceCard)}>
+              <View style={styles.cardHeader}>
+                <Text style={styles.cardTitle}>Practice History:</Text>
+                <View style={styles.timeFilter}>
+                  <Text style={styles.timeFilterText}>Last: </Text>
+                  <View style={styles.timeFilterPill}>
+                    <Text style={styles.timeFilterPillText}>Month</Text>
+                  </View>
+                  <Text style={styles.timeFilterIcon}>☰</Text>
+                </View>
+              </View>
+              
+              <View style={styles.calendar}>
+                <View style={styles.calendarHeader}>
+                  {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                    <Text key={i} style={styles.calendarDay}>{day}</Text>
+                  ))}
+                </View>
+                {practiceCalendar.map((week, weekIndex) => (
+                  <View key={weekIndex} style={styles.calendarWeek}>
+                    {week.map((practiced, dayIndex) => (
+                      <View key={dayIndex} style={styles.calendarCell}>
+                        {practiced && <Text style={styles.checkmark}>✓</Text>}
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </View>
             </View>
-          </View>
 
-          <View style={styles.styleGuideSection}>
-            <Text style={styles.sectionTitle}>Components & Shape</Text>
-            <Text style={styles.sectionBody}>
-              • Cards: 16–24px radius, layered shadows, gradient fills for hero preview.
-              {'\n'}• Buttons: pill-shaped with glowing focus ring and consistent padding.
-              {'\n'}• Piano keys: adaptive width, soft highlights, 3D-inspired depth cues.
-            </Text>
-          </View>
-
-          <View style={styles.styleGuideSection}>
-            <Text style={styles.sectionTitle}>Motion & Feedback</Text>
-            <Text style={styles.sectionBody}>
-              • Button presses lighten the surface; key presses animate the fill color.
-              {'\n'}• Inline feedback replaces pop-up alerts for a smoother workflow.
-            </Text>
+            {/* Chord Stats Card */}
+            <View style={sx(styles.card, styles.statsCard)}>
+              <Text style={styles.cardTitle}>Chord Stats:</Text>
+              <Text style={styles.statText}>Best Chord Practice Score: {chordStats.bestChordPracticeScore}</Text>
+              <Text style={styles.statText}>Best Song Practice Score: {chordStats.bestSongPracticeScore}</Text>
+              <Text style={styles.statText}>Favorite Key: {chordStats.favoriteKey}</Text>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -153,68 +175,277 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: theme.colors.background },
-  scrollContent: { paddingBottom: theme.spacing(10) },
-  scrollContentCompact: { paddingBottom: theme.spacing(6), paddingHorizontal: theme.spacing(2.5) },
-  hero: {
-    borderBottomLeftRadius: theme.radii.xl,
-    borderBottomRightRadius: theme.radii.xl,
+  screen: { 
+    flex: 1, 
+    backgroundColor: theme.colors.background 
+  },
+  
+  // Navigation
+  nav: {
+    flexDirection: 'row',
+    backgroundColor: theme.colors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+    paddingVertical: theme.spacing(2),
+    paddingHorizontal: theme.spacing(3),
+    justifyContent: 'space-around',
+  },
+  navItem: {
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing(2),
+    paddingVertical: theme.spacing(1),
+    borderRadius: theme.radii.md,
+  },
+  navItemActive: {
+    backgroundColor: theme.colors.surfaceAlt,
+  },
+  navIcon: {
+    fontSize: 28,
+    color: theme.colors.textPrimary,
+    marginBottom: 4,
+  },
+  navLabel: {
+    fontSize: 12,
+    color: theme.colors.textSecondary,
+    fontWeight: '500',
+  },
+  pianoIcon: {
+    flexDirection: 'row',
+    gap: 2,
+    marginBottom: 4,
+  },
+  pianoKey: {
+    width: 6,
+    height: 20,
+    backgroundColor: theme.colors.textPrimary,
+    borderRadius: 2,
+  },
+  chordGridIcon: {
+    width: 24,
+    height: 24,
+    borderWidth: 1,
+    borderColor: theme.colors.textPrimary,
+    borderRadius: 4,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 2,
+    gap: 2,
+    marginBottom: 4,
+  },
+  chordDot: {
+    width: 6,
+    height: 6,
+    backgroundColor: theme.colors.textPrimary,
+    borderRadius: 3,
+  },
+  profileIcon: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 2,
+    borderColor: theme.colors.textPrimary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  profileIconInner: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: theme.colors.textPrimary,
+  },
+
+  // Container
+  container: {
+    paddingTop: theme.spacing(3),
+    paddingHorizontal: theme.spacing(4),
+    paddingBottom: theme.spacing(6),
+  },
+  containerCompact: {
+    paddingHorizontal: theme.spacing(2),
+  },
+
+  // Header
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(3),
+  },
+  welcomeText: {
+    fontSize: 36,
+    fontWeight: '700',
+    color: theme.colors.textPrimary,
+    fontStyle: 'italic',
+  },
+  settingsButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: theme.colors.surface,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    paddingVertical: theme.spacing(8),
-    paddingHorizontal: theme.spacing(5),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  settingsIcon: {
+    fontSize: 24,
+    color: theme.colors.textPrimary,
+  },
+
+  // Cards Layout
+  cardsRow: {
     flexDirection: 'row',
+    gap: theme.spacing(3),
   },
-  heroCompact: { flexDirection: 'column', paddingVertical: theme.spacing(5), paddingHorizontal: theme.spacing(3) },
-  heroContent: { flex: 1 },
-  heroBadge: {
-    alignSelf: 'flex-start',
+  cardsRowCompact: {
+    flexDirection: 'column',
+  },
+
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radii.lg,
+    padding: theme.spacing(3),
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    ...theme.shadows.card,
+  },
+  cardCompact: {
+    marginBottom: theme.spacing(3),
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing(2),
+    fontStyle: 'italic',
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
+  },
+
+  // Songs Card
+  songsCard: {
+    flex: 1,
+    maxHeight: 600,
+  },
+  songsList: {
+    flex: 1,
+  },
+  songItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: theme.spacing(1.5),
+  },
+  heartIcon: {
+    fontSize: 18,
+    color: theme.colors.textSecondary,
+    marginRight: theme.spacing(1.5),
+    marginTop: 2,
+  },
+  songTextContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  songTitle: {
+    fontSize: 15,
+    color: theme.colors.textPrimary,
+    fontWeight: '500',
+  },
+  songArtist: {
+    fontSize: 15,
+    color: theme.colors.textSecondary,
+  },
+
+  // Right Column
+  rightColumn: {
+    flex: 1,
+    gap: theme.spacing(3),
+  },
+  rightColumnCompact: {
+    width: '100%',
+  },
+
+  // Practice History Card
+  practiceCard: {
+    flex: 1,
+  },
+  timeFilter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+  },
+  timeFilterText: {
+    fontSize: 14,
+    color: theme.colors.textSecondary,
+  },
+  timeFilterPill: {
+    backgroundColor: theme.colors.surfaceAlt,
     paddingHorizontal: theme.spacing(1.5),
-    paddingVertical: theme.spacing(0.75),
+    paddingVertical: theme.spacing(0.5),
     borderRadius: 999,
-    backgroundColor: theme.colors.primarySoft,
-    color: theme.colors.accent,
-    fontSize: 13,
-    fontWeight: '700',
-    letterSpacing: 0.6,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
   },
-  heroTitle: { ...theme.typography.display, color: theme.colors.textPrimary },
-  heroSubtitle: { ...theme.typography.body, color: theme.colors.textSecondary, lineHeight: 24, marginTop: theme.spacing(2) },
-  heroActions: { flexDirection: 'row', marginTop: theme.spacing(3) },
-  heroActionsCompact: { flexDirection: 'column', alignItems: 'stretch' },
-  heroActionHorizontalSpacing: { marginRight: theme.spacing(2) },
-  heroActionVerticalSpacing: { marginBottom: theme.spacing(1.5) },
-  primaryButton: { backgroundColor: theme.colors.primary, paddingHorizontal: theme.spacing(3), paddingVertical: theme.spacing(1.5), borderRadius: 999, ...theme.shadows.soft },
-  primaryButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  secondaryButton: { backgroundColor: theme.colors.surface, borderRadius: 999, borderWidth: 1, borderColor: theme.colors.border, paddingHorizontal: theme.spacing(3), paddingVertical: theme.spacing(1.5) },
-  secondaryButtonText: { color: theme.colors.accent, fontSize: 16, fontWeight: '600' },
-  metricRow: { flexDirection: 'row', marginTop: theme.spacing(3) },
-  metricRowCompact: { flexDirection: 'column' },
-  metricCard: { flex: 1, backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.radii.md, padding: theme.spacing(2.5), borderWidth: 1, borderColor: theme.colors.border },
-  metricCardSpacing: { marginRight: theme.spacing(2) },
-  metricCardCompact: { width: '100%', marginBottom: theme.spacing(1.5) },
-  metricValue: { fontSize: 26, fontWeight: '700', color: theme.colors.textPrimary },
-  metricLabel: { marginTop: 4, color: theme.colors.textMuted, fontSize: 14, lineHeight: 20 },
-  heroPreview: { flex: 0.9, justifyContent: 'flex-end' },
-  heroPreviewCompact: { alignSelf: 'stretch', justifyContent: 'center', marginTop: theme.spacing(3) },
-  previewCard: { backgroundColor: theme.colors.surface, borderRadius: theme.radii.lg, padding: theme.spacing(3), borderWidth: 1, borderColor: theme.colors.borderSoft, ...theme.shadows.card },
-  previewTitle: { fontSize: 18, fontWeight: '600', color: theme.colors.textPrimary, marginBottom: theme.spacing(1) },
-  previewBody: { color: theme.colors.textSecondary, fontSize: 15 },
-  previewAccent: { color: theme.colors.accent, fontSize: 16, fontWeight: '600', marginTop: theme.spacing(1.5) },
-  previewBadges: { flexDirection: 'row', marginTop: theme.spacing(2) },
-  previewBadge: { backgroundColor: theme.colors.accentSoft, paddingHorizontal: theme.spacing(1.5), paddingVertical: theme.spacing(0.75), borderRadius: 999 },
-  previewBadgeSpacing: { marginRight: theme.spacing(1.25) },
-  previewBadgeText: { color: theme.colors.accent, fontSize: 13, fontWeight: '600' },
-  styleGuideCard: { marginTop: theme.spacing(5), marginHorizontal: theme.spacing(3), backgroundColor: theme.colors.surface, borderRadius: theme.radii.lg, padding: theme.spacing(3), borderWidth: 1, borderColor: theme.colors.border },
-  styleGuideTitle: { ...theme.typography.title, color: theme.colors.textPrimary },
-  styleGuideSubtitle: { color: theme.colors.textSecondary, fontSize: 15 },
-  styleGuideSection: { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.radii.md, padding: theme.spacing(2.5), borderWidth: 1, borderColor: theme.colors.border, marginTop: theme.spacing(2.5) },
-  sectionTitle: { ...theme.typography.headline, color: theme.colors.textPrimary },
-  sectionBody: { ...theme.typography.body, color: theme.colors.textSecondary, lineHeight: 24 },
-  swatchRow: { flexDirection: 'row', flexWrap: 'wrap', marginTop: theme.spacing(2) },
-  swatchRowCompact: { justifyContent: 'space-between' },
-  swatchItem: { alignItems: 'center', marginRight: theme.spacing(2), marginBottom: theme.spacing(2) },
-  swatch: { width: 52, height: 52, borderRadius: theme.radii.sm, borderWidth: 1, borderColor: theme.colors.border },
-  swatchLabel: { fontSize: 12, color: theme.colors.textMuted, letterSpacing: 0.3 },
+  timeFilterPillText: {
+    fontSize: 13,
+    color: theme.colors.textPrimary,
+    fontWeight: '600',
+  },
+  timeFilterIcon: {
+    fontSize: 16,
+    color: theme.colors.textSecondary,
+  },
+  calendar: {
+    marginTop: theme.spacing(1),
+  },
+  calendarHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: theme.spacing(1.5),
+    paddingBottom: theme.spacing(1),
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  calendarDay: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.colors.textSecondary,
+    width: 40,
+    textAlign: 'center',
+  },
+  calendarWeek: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: theme.spacing(1),
+  },
+  calendarCell: {
+    width: 40,
+    height: 40,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.surfaceAlt,
+  },
+  checkmark: {
+    fontSize: 20,
+    color: theme.colors.accent,
+    fontWeight: '600',
+  },
+
+  // Stats Card
+  statsCard: {
+    backgroundColor: theme.colors.surface,
+  },
+  statText: {
+    fontSize: 15,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing(1.5),
+    fontStyle: 'italic',
+  },
 });
