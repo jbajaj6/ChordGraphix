@@ -12,6 +12,7 @@ import { chordPlayer } from '../src/audioPlayer';
 import { detectChordDetailed } from '../src/chordDetection';
 import { theme } from '../src/theme';
 import { useChordColors, ChordName } from '../src/ChordColorsContext';
+import { Link } from 'expo-router';
 
 const WHITE_NOTES = ['C', 'D', 'E', 'F', 'G', 'A', 'B'] as const;
 const BLACK_NOTE_DEFS = [
@@ -210,6 +211,61 @@ export default function Piano() {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContent} style={styles.screen}>
+      {/*navigation*/}
+      <View style={styles.nav}>
+          {/*
+          <Link href="/songPractice" asChild>
+            <Pressable style={styles.navItem}>
+              <Text style={styles.navIcon}>♪</Text>
+              <Text style={styles.navLabel}>Song Practice</Text>
+            </Pressable>
+          </Link>
+          */}
+  
+          <Link href="/chordPractice" asChild>
+              <Pressable style={styles.navItem}>
+              <View style={styles.pianoIcon}>
+                  <View style={styles.pianoKey} />
+                  <View style={styles.pianoKey} />
+                  <View style={styles.pianoKey} />
+              </View>
+              <Text style={styles.navLabel}>Chord Practice</Text>
+              </Pressable>
+          </Link>
+  
+          <Link href="/songAnalyzer" asChild>
+              <Pressable style={styles.navItem}>
+              <Text style={styles.navIcon}>↑</Text>
+              <Text style={styles.navLabel}>Upload Song</Text>
+              </Pressable>
+          </Link>
+  
+          <Pressable style={[styles.navItem, styles.navItemActive]}>
+              <Text style={styles.navIcon}>#</Text>
+              <Text style={styles.navLabel}>Piano Studio</Text>
+          </Pressable>
+          
+  
+          <Link href="/myChords" asChild>
+            <Pressable style={styles.navItem}>
+              <View style={styles.chordGridIcon}>
+                <View style={styles.chordDot} />
+                <View style={styles.chordDot} />
+                <View style={styles.chordDot} />
+              </View>
+              <Text style={styles.navLabel}>My Chords</Text>
+            </Pressable>
+          </Link>
+  
+          <Link href="/" asChild>
+              <Pressable style={styles.navItem}>
+                  <View style={styles.profileIcon}>
+                  <View style={styles.profileIconInner} />
+                  </View>
+                  <Text style={styles.navLabel}>Profile</Text>
+              </Pressable>
+          </Link>
+          </View>
       <View style={styles.headerRow}>
         <View>
           <Text style={styles.title}>Piano Chord Studio</Text>
@@ -325,4 +381,83 @@ const styles = StyleSheet.create({
   statusCard: { backgroundColor: theme.colors.surfaceAlt, borderRadius: theme.radii.md, padding: theme.spacing(2.5), borderWidth: 1, borderColor: theme.colors.border, gap: theme.spacing(1.5) },
   statusTitle: { ...theme.typography.headline, color: theme.colors.textPrimary },
   statusBody: { ...theme.typography.body, lineHeight: 24 },
+  // Navigation
+    nav: {
+      flexDirection: 'row',
+      backgroundColor: theme.colors.surface,
+      borderBottomWidth: 1,
+      borderBottomColor: theme.colors.border,
+      paddingVertical: theme.spacing(2),
+      paddingHorizontal: theme.spacing(3),
+      justifyContent: 'space-around',
+  },
+  navItem: {
+      alignItems: 'center',
+      paddingHorizontal: theme.spacing(2),
+      paddingVertical: theme.spacing(1),
+      borderRadius: theme.radii.md,
+  },
+  navItemActive: {
+      backgroundColor: theme.colors.surfaceAlt,
+  },
+  navIcon: {
+      fontSize: 28,
+      color: theme.colors.textPrimary,
+      marginBottom: 4,  // Match the profileIcon marginBottom
+      height: 28,  // Add explicit height
+      lineHeight: 28,  // Match the height
+      textAlignVertical: 'center'
+  },
+  navLabel: {
+      fontSize: 12,
+      color: theme.colors.textSecondary,
+      fontWeight: '500',
+  },
+  pianoIcon: {
+      flexDirection: 'row',
+      gap: 2,
+      marginBottom: 4,  // Changed from 2
+      height: 28,       // Added
+      alignItems: 'center'
+  },
+  pianoKey: {
+      width: 6,
+      height: 20,
+      backgroundColor: theme.colors.textPrimary,
+      borderRadius: 2,
+  },
+  chordGridIcon: {
+      width: 24,
+      height: 28,
+      borderWidth: 1,
+      borderColor: theme.colors.textPrimary,
+      borderRadius: 4,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      padding: 2,
+      gap: 2,
+      marginBottom: 4,
+  },
+  chordDot: {
+      width: 6,
+      height: 6,
+      backgroundColor: theme.colors.textPrimary,
+      borderRadius: 3,
+  },
+  profileIcon: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      borderWidth: 2,
+      borderColor: theme.colors.textPrimary,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 4,
+  },
+  profileIconInner: {
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      backgroundColor: theme.colors.textPrimary,
+  },
 });

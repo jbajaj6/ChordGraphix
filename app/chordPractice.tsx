@@ -88,6 +88,7 @@ export default function ChordPractice() {
   const [feedback, setFeedback] = useState<string>('Select a difficulty to start practicing!');
   const [showHint, setShowHint] = useState(false);
   const [streak, setStreak] = useState(0);
+  const [checked, setChecked] = useState(false);
 
   const isCompact = width < 620;
   const isTablet = width >= 768;
@@ -208,6 +209,7 @@ export default function ChordPractice() {
 
     setFeedback(result.feedback);
     setAttempts(prev => prev + 1);
+    setChecked(true);
 
     if (result.isCorrect) {
       setScore(prev => prev + 1);
@@ -216,6 +218,7 @@ export default function ChordPractice() {
       // Auto-advance after a short delay
       setTimeout(() => {
         startNewChallenge();
+        setChecked(false);
       }, 2000);
     } else {
       setStreak(0);
@@ -271,37 +274,61 @@ export default function ChordPractice() {
   if (isTablet) {
     return (
       <View style={styles.screen}>
-        {/* Navigation Bar */}
+        {/*navigation*/}
         <View style={styles.nav}>
-          <Link href="/myChords" asChild>
+            {/*
+            <Link href="/songPractice" asChild>
             <Pressable style={styles.navItem}>
-              <View style={styles.chordGridIcon}>
-                <View style={styles.chordDot} />
-                <View style={styles.chordDot} />
-                <View style={styles.chordDot} />
-              </View>
-              <Text style={styles.navLabel}>My Chords</Text>
+                <Text style={styles.navIcon}>♪</Text>
+                <Text style={styles.navLabel}>Song Practice</Text>
             </Pressable>
-          </Link>
-
-          <Pressable style={[styles.navItem, styles.navItemActive]}>
-            <View style={styles.pianoIcon}>
-              <View style={styles.pianoKeyIcon} />
-              <View style={styles.pianoKeyIcon} />
-              <View style={styles.pianoKeyIcon} />
+            </Link>
+            */}
+    
+            <Pressable style={[styles.navItem, styles.navItemActive]}>
+                <View style={styles.pianoIcon}>
+                    <View style={styles.pianoKey} />
+                    <View style={styles.pianoKey} />
+                    <View style={styles.pianoKey} />
+                </View>
+                <Text style={styles.navLabel}>Chord Practice</Text>
+            </Pressable>
+    
+            <Link href="/songAnalyzer" asChild>
+                <Pressable style={styles.navItem}>
+                <Text style={styles.navIcon}>↑</Text>
+                <Text style={styles.navLabel}>Upload Song</Text>
+                </Pressable>
+            </Link>
+    
+            <Link href="/piano" asChild>
+                <Pressable style={styles.navItem}>
+                <Text style={styles.navIcon}>#</Text>
+                <Text style={styles.navLabel}>Piano Studio</Text>
+                </Pressable>
+            </Link>
+            
+    
+            <Link href="/myChords" asChild>
+            <Pressable style={styles.navItem}>
+                <View style={styles.chordGridIcon}>
+                <View style={styles.chordDot} />
+                <View style={styles.chordDot} />
+                <View style={styles.chordDot} />
+                </View>
+                <Text style={styles.navLabel}>My Chords</Text>
+            </Pressable>
+            </Link>
+    
+            <Link href="/" asChild>
+                <Pressable style={styles.navItem}>
+                    <View style={styles.profileIcon}>
+                    <View style={styles.profileIconInner} />
+                    </View>
+                    <Text style={styles.navLabel}>Profile</Text>
+                </Pressable>
+            </Link>
             </View>
-            <Text style={styles.navLabel}>Chord Practice</Text>
-          </Pressable>
-
-          <Link href="/" asChild>
-            <Pressable style={styles.navItem}>
-              <View style={styles.profileIcon}>
-                <View style={styles.profileIconInner} />
-              </View>
-              <Text style={styles.navLabel}>Home</Text>
-            </Pressable>
-          </Link>
-        </View>
 
         <View style={styles.tabletContainer}>
           {/* Top section with controls */}
@@ -314,31 +341,7 @@ export default function ChordPractice() {
                   Master your chord recognition with randomized challenges
                 </Text>
               </View>
-            </View>
-
-            {/* Score Display */}
-            <View style={styles.scoreCard}>
-              <View style={styles.scoreRow}>
-                <View style={styles.scoreItem}>
-                  <Text style={styles.scoreValue}>{score}</Text>
-                  <Text style={styles.scoreLabel}>Correct</Text>
-                </View>
-                <View style={styles.scoreItem}>
-                  <Text style={styles.scoreValue}>{attempts}</Text>
-                  <Text style={styles.scoreLabel}>Attempts</Text>
-                </View>
-                <View style={styles.scoreItem}>
-                  <Text style={styles.scoreValue}>{accuracyRate}%</Text>
-                  <Text style={styles.scoreLabel}>Accuracy</Text>
-                </View>
-                <View style={styles.scoreItem}>
-                  <Text style={styles.scoreValue}>{streak}</Text>
-                  <Text style={styles.scoreLabel}>Streak</Text>
-                </View>
-              </View>
-            </View>
-
-            {/* Difficulty Selection */}
+              {/* Difficulty Selection */}
             <View style={styles.difficultyCard}>
               <Text style={styles.difficultyTitle}>Difficulty</Text>
               <View style={styles.difficultyButtons}>
@@ -370,11 +373,35 @@ export default function ChordPractice() {
                 ))}
               </View>
             </View>
+            </View>
+
+            {/* Score Display */}
+            <View style={styles.scoreCard}>
+              <View style={styles.scoreRow}>
+                <View style={styles.scoreItem}>
+                  <Text style={styles.scoreValue}>{score}</Text>
+                  <Text style={styles.scoreLabel}>Correct</Text>
+                </View>
+                <View style={styles.scoreItem}>
+                  <Text style={styles.scoreValue}>{attempts}</Text>
+                  <Text style={styles.scoreLabel}>Attempts</Text>
+                </View>
+                <View style={styles.scoreItem}>
+                  <Text style={styles.scoreValue}>{accuracyRate}%</Text>
+                  <Text style={styles.scoreLabel}>Accuracy</Text>
+                </View>
+                <View style={styles.scoreItem}>
+                  <Text style={styles.scoreValue}>{streak}</Text>
+                  <Text style={styles.scoreLabel}>Streak</Text>
+                </View>
+              </View>
+            </View>
+
 
             {/* Challenge Display */}
             {currentChallenge && (
               <View style={[styles.challengeCard, { borderColor: challengeColor }]}>
-                <Text style={styles.challengeTitle}>Current Challenge</Text>
+                <Text style={styles.challengeTitle}>Chord to Play:</Text>
                 <Text style={[styles.challengeChord, { color: challengeColor }]}>
                   {currentChallenge.displayName}
                 </Text>
@@ -502,35 +529,59 @@ export default function ChordPractice() {
     <ScrollView contentContainerStyle={styles.scrollContent} style={styles.screen}>
       {/* Navigation Bar */}
       <View style={styles.nav}>
-        <Link href="/myChords" asChild>
-          <Pressable style={styles.navItem}>
-            <View style={styles.chordGridIcon}>
-              <View style={styles.chordDot} />
-              <View style={styles.chordDot} />
-              <View style={styles.chordDot} />
-            </View>
-            <Text style={styles.navLabel}>My Chords</Text>
-          </Pressable>
+        {/*
+        <Link href="/songPractice" asChild>
+        <Pressable style={styles.navItem}>
+            <Text style={styles.navIcon}>♪</Text>
+            <Text style={styles.navLabel}>Song Practice</Text>
+        </Pressable>
         </Link>
+        */}
 
         <Pressable style={[styles.navItem, styles.navItemActive]}>
-          <View style={styles.pianoIcon}>
-            <View style={styles.pianoKeyIcon} />
-            <View style={styles.pianoKeyIcon} />
-            <View style={styles.pianoKeyIcon} />
-          </View>
-          <Text style={styles.navLabel}>Chord Practice</Text>
+            <View style={styles.pianoIcon}>
+                <View style={styles.pianoKey} />
+                <View style={styles.pianoKey} />
+                <View style={styles.pianoKey} />
+            </View>
+            <Text style={styles.navLabel}>Chord Practice</Text>
         </Pressable>
 
-        <Link href="/" asChild>
-          <Pressable style={styles.navItem}>
-            <View style={styles.profileIcon}>
-              <View style={styles.profileIconInner} />
-            </View>
-            <Text style={styles.navLabel}>Home</Text>
-          </Pressable>
+        <Link href="/songAnalyzer" asChild>
+            <Pressable style={styles.navItem}>
+            <Text style={styles.navIcon}>↑</Text>
+            <Text style={styles.navLabel}>Upload Song</Text>
+            </Pressable>
         </Link>
-      </View>
+
+        <Link href="/piano" asChild>
+            <Pressable style={styles.navItem}>
+            <Text style={styles.navIcon}>#</Text>
+            <Text style={styles.navLabel}>Piano Studio</Text>
+            </Pressable>
+        </Link>
+        
+
+        <Link href="/myChords" asChild>
+        <Pressable style={styles.navItem}>
+            <View style={styles.chordGridIcon}>
+            <View style={styles.chordDot} />
+            <View style={styles.chordDot} />
+            <View style={styles.chordDot} />
+            </View>
+            <Text style={styles.navLabel}>My Chords</Text>
+        </Pressable>
+        </Link>
+
+        <Link href="/" asChild>
+            <Pressable style={styles.navItem}>
+                <View style={styles.profileIcon}>
+                <View style={styles.profileIconInner} />
+                </View>
+                <Text style={styles.navLabel}>Profile</Text>
+            </Pressable>
+        </Link>
+        </View>
 
       {/* Header */}
       <View style={styles.headerRow}>
@@ -540,31 +591,7 @@ export default function ChordPractice() {
             Master your chord recognition with randomized challenges
           </Text>
         </View>
-      </View>
-
-      {/* Score Display */}
-      <View style={styles.scoreCard}>
-        <View style={styles.scoreRow}>
-          <View style={styles.scoreItem}>
-            <Text style={styles.scoreValue}>{score}</Text>
-            <Text style={styles.scoreLabel}>Correct</Text>
-          </View>
-          <View style={styles.scoreItem}>
-            <Text style={styles.scoreValue}>{attempts}</Text>
-            <Text style={styles.scoreLabel}>Attempts</Text>
-          </View>
-          <View style={styles.scoreItem}>
-            <Text style={styles.scoreValue}>{accuracyRate}%</Text>
-            <Text style={styles.scoreLabel}>Accuracy</Text>
-          </View>
-          <View style={styles.scoreItem}>
-            <Text style={styles.scoreValue}>{streak}</Text>
-            <Text style={styles.scoreLabel}>Streak</Text>
-          </View>
-        </View>
-      </View>
-
-      {/* Difficulty Selection */}
+        {/* Difficulty Selection */}
       <View style={styles.difficultyCard}>
         <Text style={styles.difficultyTitle}>Difficulty</Text>
         <View style={styles.difficultyButtons}>
@@ -596,11 +623,35 @@ export default function ChordPractice() {
           ))}
         </View>
       </View>
+      </View>
+
+      {/* Score Display */}
+      <View style={styles.scoreCard}>
+        <View style={styles.scoreRow}>
+          <View style={styles.scoreItem}>
+            <Text style={styles.scoreValue}>{score}</Text>
+            <Text style={styles.scoreLabel}>Correct</Text>
+          </View>
+          <View style={styles.scoreItem}>
+            <Text style={styles.scoreValue}>{attempts}</Text>
+            <Text style={styles.scoreLabel}>Attempts</Text>
+          </View>
+          <View style={styles.scoreItem}>
+            <Text style={styles.scoreValue}>{accuracyRate}%</Text>
+            <Text style={styles.scoreLabel}>Accuracy</Text>
+          </View>
+          <View style={styles.scoreItem}>
+            <Text style={styles.scoreValue}>{streak}</Text>
+            <Text style={styles.scoreLabel}>Streak</Text>
+          </View>
+        </View>
+      </View>
+
 
       {/* Challenge Display */}
       {currentChallenge && (
         <View style={[styles.challengeCard, { borderColor: challengeColor }]}>
-          <Text style={styles.challengeTitle}>Current Challenge</Text>
+          <Text style={styles.challengeTitle}>Chord to Play:</Text>
           <Text style={[styles.challengeChord, { color: challengeColor }]}>
             {currentChallenge.displayName}
           </Text>
@@ -754,69 +805,76 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing(2),
     paddingHorizontal: theme.spacing(3),
     justifyContent: 'space-around',
-    marginBottom: theme.spacing(3),
-  },
-  navItem: {
-    alignItems: 'center',
-    paddingHorizontal: theme.spacing(2),
-    paddingVertical: theme.spacing(1),
-    borderRadius: theme.radii.md,
-  },
-  navItemActive: {
-    backgroundColor: theme.colors.surfaceAlt,
-  },
-  navLabel: {
-    fontSize: 12,
-    color: theme.colors.textSecondary,
-    fontWeight: '500',
-    marginTop: 4,
-  },
-  pianoIcon: {
-    flexDirection: 'row',
-    marginBottom: 4,
-  },
-  pianoKeyIcon: {
-    width: 6,
-    height: 20,
-    backgroundColor: theme.colors.textPrimary,
-    borderRadius: 2,
-    marginRight: 2,
-  },
-  chordGridIcon: {
-    width: 24,
-    height: 24,
-    borderWidth: 1,
-    borderColor: theme.colors.textPrimary,
-    borderRadius: 4,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    padding: 2,
-    marginBottom: 4,
-  },
-  chordDot: {
-    width: 6,
-    height: 6,
-    backgroundColor: theme.colors.textPrimary,
-    borderRadius: 3,
-    marginRight: 2,
-    marginBottom: 2,
-  },
-  profileIcon: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 2,
-    borderColor: theme.colors.textPrimary,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  profileIconInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: theme.colors.textPrimary,
-  },
+    },
+    navItem: {
+        alignItems: 'center',
+        paddingHorizontal: theme.spacing(2),
+        paddingVertical: theme.spacing(1),
+        borderRadius: theme.radii.md,
+    },
+    navItemActive: {
+        backgroundColor: theme.colors.surfaceAlt,
+    },
+    navIcon: {
+        fontSize: 28,
+        color: theme.colors.textPrimary,
+        marginBottom: 4,  // Match the profileIcon marginBottom
+        height: 28,  // Add explicit height
+        lineHeight: 28,  // Match the height
+        textAlignVertical: 'center'
+    },
+    navLabel: {
+        fontSize: 12,
+        color: theme.colors.textSecondary,
+        fontWeight: '500',
+    },
+    pianoIcon: {
+        flexDirection: 'row',
+        gap: 2,
+        marginBottom: 4,  // Changed from 2
+        height: 28,       // Added
+        alignItems: 'center'
+    },
+    pianoKey: {
+        width: 6,
+        height: 20,
+        backgroundColor: theme.colors.textPrimary,
+        borderRadius: 2,
+    },
+    chordGridIcon: {
+        width: 24,
+        height: 28,
+        borderWidth: 1,
+        borderColor: theme.colors.textPrimary,
+        borderRadius: 4,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 2,
+        gap: 2,
+        marginBottom: 4,
+    },
+    chordDot: {
+        width: 6,
+        height: 6,
+        backgroundColor: theme.colors.textPrimary,
+        borderRadius: 3,
+    },
+    profileIcon: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        borderWidth: 2,
+        borderColor: theme.colors.textPrimary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 4,
+    },
+    profileIconInner: {
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        backgroundColor: theme.colors.textPrimary,
+    },
   scrollContent: { 
     paddingBottom: theme.spacing(6), 
     paddingHorizontal: theme.spacing(3), 
@@ -826,12 +884,13 @@ const styles = StyleSheet.create({
   headerRow: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
-    alignItems: 'flex-start', 
-    gap: theme.spacing(2) 
+    alignItems: 'center', 
+    gap: theme.spacing(5), 
+    padding: theme.spacing(1.5),
   },
   title: { 
     ...theme.typography.title, 
-    fontSize: 28, 
+    fontSize: 35, 
     color: theme.colors.textPrimary 
   },
   subtitle: { 
@@ -843,7 +902,7 @@ const styles = StyleSheet.create({
   scoreCard: {
     backgroundColor: theme.colors.surfaceAlt,
     borderRadius: theme.radii.md,
-    padding: theme.spacing(2.5),
+    padding: theme.spacing(1),
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
@@ -867,9 +926,10 @@ const styles = StyleSheet.create({
   difficultyCard: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radii.md,
-    padding: theme.spacing(2.5),
+    padding: theme.spacing(3),
     borderWidth: 1,
     borderColor: theme.colors.border,
+    minWidth: 700,  // Added to make it bigger
   },
   difficultyTitle: {
     ...theme.typography.headline,
@@ -905,7 +965,7 @@ const styles = StyleSheet.create({
   challengeCard: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radii.md,
-    padding: theme.spacing(3),
+    padding: theme.spacing(1.5),
     borderWidth: 2,
     borderColor: theme.colors.accent,
     alignItems: 'center',
@@ -913,13 +973,13 @@ const styles = StyleSheet.create({
   challengeTitle: {
     fontSize: 14,
     color: theme.colors.textSecondary,
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(.5),
   },
   challengeChord: {
     fontSize: 32,
     fontWeight: '700',
     color: theme.colors.accent,
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(.5),
   },
   challengeNotes: {
     fontSize: 14,
@@ -932,7 +992,7 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing(1),
   },
   keyboardPanel: { 
-    padding: theme.spacing(2), 
+    padding: theme.spacing(1), 
     borderRadius: theme.radii.md, 
     backgroundColor: 'transparent', 
     borderWidth: 0, 
@@ -940,7 +1000,7 @@ const styles = StyleSheet.create({
   },
   keyboardContainer: { 
     position: 'relative', 
-    marginBottom: theme.spacing(2), 
+    marginBottom: theme.spacing(1), 
     alignItems: 'center', 
     overflow: 'visible' 
   },
@@ -953,7 +1013,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0' 
   },
   whiteKey: { 
-    height: 200, 
+    height: 300, 
     backgroundColor: '#fff', 
     borderRightWidth: 1, 
     borderRightColor: '#ddd', 
@@ -1010,7 +1070,7 @@ const styles = StyleSheet.create({
   controlsRow: { 
     flexDirection: 'row', 
     flexWrap: 'wrap', 
-    gap: theme.spacing(2) 
+    gap: theme.spacing(1) 
   },
   primaryButton: { 
     backgroundColor: theme.colors.primary, 
@@ -1053,10 +1113,10 @@ const styles = StyleSheet.create({
   feedbackCard: { 
     backgroundColor: theme.colors.surfaceAlt, 
     borderRadius: theme.radii.md, 
-    padding: theme.spacing(2.5), 
+    padding: theme.spacing(1.5), 
     borderWidth: 1, 
     borderColor: theme.colors.border, 
-    gap: theme.spacing(1.5) 
+    gap: theme.spacing(1) 
   },
   feedbackTitle: { 
     ...theme.typography.headline, 

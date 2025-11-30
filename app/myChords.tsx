@@ -486,41 +486,48 @@ export default function MyChords() {
         */}
 
         <Link href="/chordPractice" asChild>
-          <Pressable style={styles.navItem}>
+            <Pressable style={styles.navItem}>
             <View style={styles.pianoIcon}>
-              <View style={styles.pianoKeyIcon} />
-              <View style={styles.pianoKeyIcon} />
-              <View style={styles.pianoKeyIcon} />
+                <View style={styles.pianoKey} />
+                <View style={styles.pianoKey} />
+                <View style={styles.pianoKey} />
             </View>
             <Text style={styles.navLabel}>Chord Practice</Text>
-          </Pressable>
+            </Pressable>
         </Link>
 
         <Link href="/songAnalyzer" asChild>
-          <Pressable style={styles.navItem}>
+            <Pressable style={styles.navItem}>
             <Text style={styles.navIcon}>↑</Text>
             <Text style={styles.navLabel}>Upload Song</Text>
-          </Pressable>
+            </Pressable>
+        </Link>
+
+        <Link href="/piano" asChild>
+            <Pressable style={styles.navItem}>
+            <Text style={styles.navIcon}>#</Text>
+            <Text style={styles.navLabel}>Piano Studio</Text>
+            </Pressable>
         </Link>
 
         <Pressable style={[styles.navItem, styles.navItemActive]}>
-          <View style={styles.chordGridIcon}>
+        <View style={styles.chordGridIcon}>
             <View style={styles.chordDot} />
             <View style={styles.chordDot} />
             <View style={styles.chordDot} />
-          </View>
-          <Text style={styles.navLabel}>My Chords</Text>
+        </View>
+        <Text style={styles.navLabel}>My Chords</Text>
         </Pressable>
 
         <Link href="/" asChild>
-          <Pressable style={styles.navItem}>
-            <View style={styles.profileIcon}>
-              <View style={styles.profileIconInner} />
-            </View>
-            <Text style={styles.navLabel}>Profile</Text>
-          </Pressable>
+            <Pressable style={styles.navItem}>
+                <View style={styles.profileIcon}>
+                <View style={styles.profileIconInner} />
+                </View>
+                <Text style={styles.navLabel}>Profile</Text>
+            </Pressable>
         </Link>
-      </View>
+        </View>
 
       <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.pageTitle}>Chords</Text>
@@ -554,79 +561,84 @@ const styles = StyleSheet.create({
       backgroundColor: theme.colors.background,
     },
   
-    // Navigation
+   // Navigation
     nav: {
-      flexDirection: 'row',
-      backgroundColor: theme.colors.surface,
-      borderBottomWidth: 1,
-      borderBottomColor: theme.colors.border,
-      paddingVertical: theme.spacing(2),
-      paddingHorizontal: theme.spacing(3),
-      justifyContent: 'space-around',
+        flexDirection: 'row',
+        backgroundColor: theme.colors.surface,
+        borderBottomWidth: 1,
+        borderBottomColor: theme.colors.border,
+        paddingVertical: theme.spacing(2),
+        paddingHorizontal: theme.spacing(3),
+        justifyContent: 'space-around',
     },
     navItem: {
-      alignItems: 'center',
-      paddingHorizontal: theme.spacing(2),
-      paddingVertical: theme.spacing(1),
-      borderRadius: theme.radii.md,
+        alignItems: 'center',
+        paddingHorizontal: theme.spacing(2),
+        paddingVertical: theme.spacing(1),
+        borderRadius: theme.radii.md,
     },
     navItemActive: {
-      backgroundColor: theme.colors.surfaceAlt,
+        backgroundColor: theme.colors.surfaceAlt,
     },
     navIcon: {
-      fontSize: 28,
-      color: theme.colors.textPrimary,
-      marginBottom: 4,
+        fontSize: 28,
+        color: theme.colors.textPrimary,
+        marginBottom: 4,  // Match the profileIcon marginBottom
+        height: 28,  // Add explicit height
+        lineHeight: 28,  // Match the height
+        textAlignVertical: 'center'
     },
     navLabel: {
-      fontSize: 12,
-      color: theme.colors.textSecondary,
-      fontWeight: '500',
+        fontSize: 12,
+        color: theme.colors.textSecondary,
+        fontWeight: '500',
     },
     pianoIcon: {
-      flexDirection: 'row',
-      gap: 2,
-      marginBottom: 4,
+        flexDirection: 'row',
+        gap: 2,
+        marginBottom: 4,  // Changed from 2
+        height: 28,       // Added
+        alignItems: 'center'
     },
-    pianoKeyIcon: {
-      width: 6,
-      height: 20,
-      backgroundColor: theme.colors.textPrimary,
-      borderRadius: 2,
+    pianoKey: {
+        width: 6,
+        height: 20,
+        backgroundColor: theme.colors.textPrimary,
+        borderRadius: 2,
     },
     chordGridIcon: {
-      width: 24,
-      height: 24,
-      borderWidth: 1,
-      borderColor: theme.colors.textPrimary,
-      borderRadius: 4,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      padding: 2,
-      gap: 2,
-      marginBottom: 4,
+        width: 24,
+        height: 28,
+        borderWidth: 1,
+        borderColor: theme.colors.textPrimary,
+        borderRadius: 4,
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        padding: 2,
+        gap: 2,
+        marginBottom: 4,
     },
     chordDot: {
-      width: 6,
-      height: 6,
-      backgroundColor: theme.colors.textPrimary,
-      borderRadius: 3,
+        width: 6,
+        height: 6,
+        backgroundColor: theme.colors.textPrimary,
+        borderRadius: 3,
     },
     profileIcon: {
-      width: 28,
-      height: 28,
-      borderRadius: 14,
-      borderWidth: 2,
-      borderColor: theme.colors.textPrimary,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginBottom: 4,
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        borderWidth: 2,
+        borderColor: theme.colors.textPrimary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 4,
     },
     profileIconInner: {
-      width: 12,
-      height: 12,
-      borderRadius: 6,
-      backgroundColor: theme.colors.textPrimary,
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        backgroundColor: theme.colors.textPrimary,
     },
   
     // Container

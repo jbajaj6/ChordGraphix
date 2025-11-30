@@ -77,9 +77,6 @@ export default function Index() {
             <Text style={styles.navLabel}>Piano Studio</Text>
           </Pressable>
         </Link>
-
-
-
           
         <Link href="/myChords" asChild>
           <Pressable style={styles.navItem}>
@@ -202,7 +199,10 @@ const styles = StyleSheet.create({
   navIcon: {
     fontSize: 28,
     color: theme.colors.textPrimary,
-    marginBottom: 4,
+    marginBottom: 4,  // Match the profileIcon marginBottom
+    height: 28,  // Add explicit height
+    lineHeight: 28,  // Match the height
+    textAlignVertical: 'center'
   },
   navLabel: {
     fontSize: 12,
@@ -212,7 +212,9 @@ const styles = StyleSheet.create({
   pianoIcon: {
     flexDirection: 'row',
     gap: 2,
-    marginBottom: 4,
+    marginBottom: 4,  // Changed from 2
+    height: 28,       // Added
+    alignItems: 'center'
   },
   pianoKey: {
     width: 6,
@@ -222,7 +224,7 @@ const styles = StyleSheet.create({
   },
   chordGridIcon: {
     width: 24,
-    height: 24,
+    height: 28,
     borderWidth: 1,
     borderColor: theme.colors.textPrimary,
     borderRadius: 4,

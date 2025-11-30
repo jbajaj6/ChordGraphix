@@ -1,5 +1,3 @@
-import { Chord } from '@tonaljs/tonal';
-
 interface ChordSegment {
   time: number;
   duration: number;
@@ -129,9 +127,7 @@ class SongAnalyzer {
     return chords;
   }
 
-  /**
-   * Compute chromagram (12-bin pitch class profile)
-   */
+   // Compute chromagram (12-bin pitch class profile)
   private computeChromagram(audioData: Float32Array, sampleRate: number): number[] {
     const chromagram = new Array(12).fill(0);
     const fftSize = 4096;
@@ -168,9 +164,8 @@ class SongAnalyzer {
     return chromagram;
   }
 
-  /**
-   * Compute magnitude spectrum using DFT
-   */
+   // Compute magnitude spectrum using DFT
+
   private computeMagnitudeSpectrum(signal: Float32Array): Float32Array {
     const N = signal.length;
     const spectrum = new Float32Array(N / 2);
@@ -202,18 +197,14 @@ class SongAnalyzer {
     return spectrum;
   }
 
-  /**
-   * Convert frequency to pitch class (0=C, 1=C#, ..., 11=B)
-   */
+   // Convert frequency to pitch class (0=C, 1=C#, ..., 11=B)
   private frequencyToPitchClass(frequency: number): number {
     const noteNum = 12 * Math.log2(frequency / 440);
     const midi = Math.round(noteNum) + 69;
     return midi % 12;
   }
 
-  /**
-   * Detect chord from chromagram using template matching
-   */
+   //Detect chord from chromagram using template matching
   private chromagramToChord(chromagram: number[]): { chord: string; notes: string[]; strength: number } {
     const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
     
@@ -268,9 +259,7 @@ class SongAnalyzer {
     return bestMatch;
   }
 
-  /**
-   * Estimate musical key from chord progression
-   */
+   //Estimate musical key from chord progression
   private estimateKey(chords: ChordSegment[]): { key: string | null; scale: string | null } {
     if (chords.length === 0) return { key: null, scale: null };
 
@@ -303,9 +292,7 @@ class SongAnalyzer {
     return { key: null, scale: null };
   }
 
-  /**
-   * Simple BPM estimation using onset detection
-   */
+   //Simple BPM estimation using onset detection
   private estimateBPM(audioData: Float32Array, sampleRate: number): number | null {
     const hopSize = 512;
     const onsets: number[] = [];
