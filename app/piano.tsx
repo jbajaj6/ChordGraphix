@@ -213,14 +213,12 @@ export default function Piano() {
     <ScrollView contentContainerStyle={styles.scrollContent} style={styles.screen}>
       {/*navigation*/}
       <View style={styles.nav}>
-          {/*
-          <Link href="/songPractice" asChild>
+          <Link href="/songLibrary" asChild>
             <Pressable style={styles.navItem}>
               <Text style={styles.navIcon}>♪</Text>
-              <Text style={styles.navLabel}>Song Practice</Text>
+              <Text style={styles.navLabel}>Song Library</Text>
             </Pressable>
           </Link>
-          */}
   
           <Link href="/chordPractice" asChild>
               <Pressable style={styles.navItem}>

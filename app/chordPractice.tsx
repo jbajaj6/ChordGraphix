@@ -276,14 +276,13 @@ export default function ChordPractice() {
       <View style={styles.screen}>
         {/*navigation*/}
         <View style={styles.nav}>
-            {/*
-            <Link href="/songPractice" asChild>
+
+            <Link href="/songLibrary" asChild>
             <Pressable style={styles.navItem}>
                 <Text style={styles.navIcon}>♪</Text>
-                <Text style={styles.navLabel}>Song Practice</Text>
+                <Text style={styles.navLabel}>Song Library</Text>
             </Pressable>
             </Link>
-            */}
     
             <Pressable style={[styles.navItem, styles.navItemActive]}>
                 <View style={styles.pianoIcon}>
