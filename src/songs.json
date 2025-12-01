@@ -1,0 +1,763 @@
+[
+    {
+      "name": "05 All Too Well",
+      "artist": "Taylor Swift",
+      "analyzedDuration": "30.00",
+      "key": "C",
+      "scale": "major",
+      "bpm": null,
+      "chords": [
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "C#m",
+          "notes": "C#, E, G#"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "Gm",
+          "notes": "G, A#, D"
+        },
+        {
+          "duration": 2,
+          "chord": "G",
+          "notes": "G, B, D"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Cm",
+          "notes": "C, D#, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "F",
+          "notes": "F, A, C"
+        }
+      ],
+      "id": "1764523459887",
+      "dateAnalyzed": "2025-11-30T17:24:19.887Z"
+    },
+    {
+      "name": "05 All Too Well",
+      "artist": "Taylor Swift",
+      "analyzedDuration": "30.00",
+      "key": "C",
+      "scale": "major",
+      "bpm": null,
+      "chords": [
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "C#m",
+          "notes": "C#, E, G#"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "Gm",
+          "notes": "G, A#, D"
+        },
+        {
+          "duration": 2,
+          "chord": "G",
+          "notes": "G, B, D"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Cm",
+          "notes": "C, D#, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "F",
+          "notes": "F, A, C"
+        }
+      ],
+      "id": "1764523687202",
+      "dateAnalyzed": "2025-11-30T17:28:07.202Z"
+    },
+    {
+      "name": "05 All Too Well",
+      "artist": "Taylor Swift",
+      "analyzedDuration": "30.00",
+      "key": "C",
+      "scale": "major",
+      "bpm": null,
+      "chords": [
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "C#m",
+          "notes": "C#, E, G#"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "Gm",
+          "notes": "G, A#, D"
+        },
+        {
+          "duration": 2,
+          "chord": "G",
+          "notes": "G, B, D"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Cm",
+          "notes": "C, D#, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "F",
+          "notes": "F, A, C"
+        }
+      ],
+      "id": "1764524044161",
+      "dateAnalyzed": "2025-11-30T17:34:04.161Z"
+    },
+    {
+      "name": "05 All Too Well",
+      "artist": "TS",
+      "analyzedDuration": "30.00",
+      "key": "C",
+      "scale": "major",
+      "bpm": null,
+      "chords": [
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "C#m",
+          "notes": "C#, E, G#"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "Gm",
+          "notes": "G, A#, D"
+        },
+        {
+          "duration": 2,
+          "chord": "G",
+          "notes": "G, B, D"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Cm",
+          "notes": "C, D#, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "F",
+          "notes": "F, A, C"
+        }
+      ],
+      "id": "1764524229170",
+      "dateAnalyzed": "2025-11-30T17:37:09.170Z"
+    },
+    {
+      "name": "05 All Too Well",
+      "artist": "TS",
+      "analyzedDuration": "30.00",
+      "key": "C",
+      "scale": "major",
+      "bpm": null,
+      "chords": [
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "C#m",
+          "notes": "C#, E, G#"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "Gm",
+          "notes": "G, A#, D"
+        },
+        {
+          "duration": 2,
+          "chord": "G",
+          "notes": "G, B, D"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Fm",
+          "notes": "F, G#, C"
+        },
+        {
+          "duration": 2,
+          "chord": "C",
+          "notes": "C, E, G"
+        },
+        {
+          "duration": 2,
+          "chord": "Cm",
+          "notes": "C, D#, G"
+        },
+        {
+          "duration": 2,
+          "chord": "D",
+          "notes": "D, F#, A"
+        },
+        {
+          "duration": 2,
+          "chord": "E",
+          "notes": "E, G#, B"
+        },
+        {
+          "duration": 2,
+          "chord": "F",
+          "notes": "F, A, C"
+        }
+      ],
+      "id": "1764524375073",
+      "dateAnalyzed": "2025-11-30T17:39:35.073Z"
+    },
+    {
+      "name": "02 Sign of the Times",
+      "artist": "HS",
+      "duration": 340.7281458333333,
+      "analyzedDuration": 30,
+      "key": "C",
+      "scale": "major",
+      "bpm": null,
+      "chords": [
+        {
+          "time": 0,
+          "duration": 2,
+          "chord": "F",
+          "notes": [
+            "F",
+            "A",
+            "C"
+          ]
+        },
+        {
+          "time": 2,
+          "duration": 2,
+          "chord": "F",
+          "notes": [
+            "F",
+            "A",
+            "C"
+          ]
+        },
+        {
+          "time": 4,
+          "duration": 2,
+          "chord": "F",
+          "notes": [
+            "F",
+            "A",
+            "C"
+          ]
+        },
+        {
+          "time": 6,
+          "duration": 2,
+          "chord": "F",
+          "notes": [
+            "F",
+            "A",
+            "C"
+          ]
+        },
+        {
+          "time": 8,
+          "duration": 2,
+          "chord": "C",
+          "notes": [
+            "C",
+            "E",
+            "G"
+          ]
+        },
+        {
+          "time": 10,
+          "duration": 2,
+          "chord": "C",
+          "notes": [
+            "C",
+            "E",
+            "G"
+          ]
+        },
+        {
+          "time": 12,
+          "duration": 2,
+          "chord": "C",
+          "notes": [
+            "C",
+            "E",
+            "G"
+          ]
+        },
+        {
+          "time": 14,
+          "duration": 2,
+          "chord": "C",
+          "notes": [
+            "C",
+            "E",
+            "G"
+          ]
+        },
+        {
+          "time": 16,
+          "duration": 2,
+          "chord": "F",
+          "notes": [
+            "F",
+            "A",
+            "C"
+          ]
+        },
+        {
+          "time": 18,
+          "duration": 2,
+          "chord": "F",
+          "notes": [
+            "F",
+            "A",
+            "C"
+          ]
+        },
+        {
+          "time": 20,
+          "duration": 2,
+          "chord": "E",
+          "notes": [
+            "E",
+            "G#",
+            "B"
+          ]
+        },
+        {
+          "time": 22,
+          "duration": 2,
+          "chord": "Dm",
+          "notes": [
+            "D",
+            "F",
+            "A"
+          ]
+        },
+        {
+          "time": 24,
+          "duration": 2,
+          "chord": "Cm",
+          "notes": [
+            "C",
+            "D#",
+            "G"
+          ]
+        },
+        {
+          "time": 26,
+          "duration": 2,
+          "chord": "C",
+          "notes": [
+            "C",
+            "E",
+            "G"
+          ]
+        },
+        {
+          "time": 28,
+          "duration": 2,
+          "chord": "Cm",
+          "notes": [
+            "C",
+            "D#",
+            "G"
+          ]
+        }
+      ],
+      "id": "1764525736181",
+      "dateAnalyzed": "2025-11-30T18:02:16.181Z"
+    },
+    {
+      "name": "13 Clean",
+      "artist": "Taylor Swift",
+      "duration": 271.0218541666667,
+      "analyzedDuration": 30,
+      "key": "E",
+      "scale": "major",
+      "bpm": null,
+      "chords": [
+        {
+          "time": 0,
+          "duration": 2,
+          "chord": "E",
+          "notes": [
+            "E",
+            "G#",
+            "B"
+          ]
+        },
+        {
+          "time": 2,
+          "duration": 2,
+          "chord": "C",
+          "notes": [
+            "C",
+            "E",
+            "G"
+          ]
+        },
+        {
+          "time": 4,
+          "duration": 2,
+          "chord": "C#m",
+          "notes": [
+            "C#",
+            "E",
+            "G#"
+          ]
+        },
+        {
+          "time": 6,
+          "duration": 2,
+          "chord": "C#m",
+          "notes": [
+            "C#",
+            "E",
+            "G#"
+          ]
+        },
+        {
+          "time": 8,
+          "duration": 2,
+          "chord": "E",
+          "notes": [
+            "E",
+            "G#",
+            "B"
+          ]
+        },
+        {
+          "time": 10,
+          "duration": 2,
+          "chord": "E",
+          "notes": [
+            "E",
+            "G#",
+            "B"
+          ]
+        },
+        {
+          "time": 12,
+          "duration": 2,
+          "chord": "B",
+          "notes": [
+            "B",
+            "D#",
+            "F#"
+          ]
+        },
+        {
+          "time": 14,
+          "duration": 2,
+          "chord": "E",
+          "notes": [
+            "E",
+            "G#",
+            "B"
+          ]
+        },
+        {
+          "time": 16,
+          "duration": 2,
+          "chord": "E",
+          "notes": [
+            "E",
+            "G#",
+            "B"
+          ]
+        },
+        {
+          "time": 18,
+          "duration": 2,
+          "chord": "E",
+          "notes": [
+            "E",
+            "G#",
+            "B"
+          ]
+        },
+        {
+          "time": 20,
+          "duration": 2,
+          "chord": "D#m",
+          "notes": [
+            "D#",
+            "F#",
+            "A#"
+          ]
+        },
+        {
+          "time": 22,
+          "duration": 2,
+          "chord": "E",
+          "notes": [
+            "E",
+            "G#",
+            "B"
+          ]
+        },
+        {
+          "time": 24,
+          "duration": 2,
+          "chord": "D#m",
+          "notes": [
+            "D#",
+            "F#",
+            "A#"
+          ]
+        },
+        {
+          "time": 26,
+          "duration": 2,
+          "chord": "D#",
+          "notes": [
+            "D#",
+            "G",
+            "A#"
+          ]
+        },
+        {
+          "time": 28,
+          "duration": 2,
+          "chord": "Am",
+          "notes": [
+            "A",
+            "C",
+            "E"
+          ]
+        }
+      ],
+      "id": "1764526937235",
+      "dateAnalyzed": "2025-11-30T18:22:17.235Z"
+    }
+  ]

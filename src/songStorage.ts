@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
+import songsData from './songs.json';
 
 export interface SavedChord {
   time: number;
@@ -13,7 +14,7 @@ export interface SavedSong {
   name: string;
   artist?: string;
   dateAnalyzed: string;
-  duration: number;
+  duration?: number;
   analyzedDuration: number;
   key: string | null;
   scale: string | null;
@@ -22,6 +23,85 @@ export interface SavedSong {
 }
 
 const STORAGE_KEY = '@analyzed_songs';
+
+// Normalize song data from JSON to match SavedSong interface
+function normalizeSong(song: any): SavedSong {
+  // Normalize chords
+  const normalizedChords: SavedChord[] = [];
+  let currentTime = 0;
+
+  for (let i = 0; i < song.chords.length; i++) {
+    const chord = song.chords[i];
+    
+    // Handle time - use provided time or calculate from previous chords
+    const time = chord.time !== undefined ? 
+      (typeof chord.time === 'string' ? parseFloat(chord.time) : chord.time) : 
+      currentTime;
+    
+    // Handle duration
+    const duration = typeof chord.duration === 'string' ? 
+      parseFloat(chord.duration) : 
+      chord.duration;
+    
+    // Handle notes - convert string to array if needed
+    let notes: string[];
+    if (typeof chord.notes === 'string') {
+      // Split comma-separated string and trim
+      notes = chord.notes.split(',').map((n: string) => n.trim());
+    } else if (Array.isArray(chord.notes)) {
+      notes = chord.notes;
+    } else {
+      notes = [];
+    }
+    
+    normalizedChords.push({
+      time,
+      duration,
+      chord: chord.chord,
+      notes,
+    });
+    
+    // Update currentTime for next chord if time wasn't provided
+    currentTime = time + duration;
+  }
+  
+  // Normalize analyzedDuration
+  const analyzedDuration = typeof song.analyzedDuration === 'string' ?
+    parseFloat(song.analyzedDuration) :
+    song.analyzedDuration;
+  
+  // Normalize duration (optional field)
+  const duration = song.duration !== undefined ?
+    (typeof song.duration === 'string' ? parseFloat(song.duration) : song.duration) :
+    undefined;
+  
+  return {
+    id: song.id,
+    name: song.name,
+    artist: song.artist,
+    dateAnalyzed: song.dateAnalyzed || new Date().toISOString(),
+    duration,
+    analyzedDuration,
+    key: song.key || null,
+    scale: song.scale || null,
+    bpm: song.bpm || null,
+    chords: normalizedChords,
+  };
+}
+
+// Load songs from JSON file
+function loadSongsFromJSON(): SavedSong[] {
+  try {
+    if (!songsData || !Array.isArray(songsData)) {
+      return [];
+    }
+    
+    return songsData.map(normalizeSong);
+  } catch (error) {
+    console.error('Error loading songs from JSON:', error);
+    return [];
+  }
+}
 
 class SongStorageService {
   // Save a new analyzed song
@@ -45,25 +125,54 @@ class SongStorageService {
     }
   }
 
-  // Get all saved songs
+  // Get all saved songs (from both JSON and AsyncStorage)
   async getAllSongs(): Promise<SavedSong[]> {
     try {
+      // Load songs from JSON file
+      const jsonSongs = loadSongsFromJSON();
+      
+      // Load songs from AsyncStorage
       const data = await AsyncStorage.getItem(STORAGE_KEY);
-      if (!data) return [];
+      let storageSongs: SavedSong[] = [];
       
-      const songs = JSON.parse(data);
+      if (data) {
+        const parsed = JSON.parse(data);
+        storageSongs = parsed.map((song: SavedSong) => ({
+          ...song,
+          chords: song.chords.map(chord => ({
+            ...chord,
+            time: typeof chord.time === 'string' ? parseFloat(chord.time) : chord.time,
+            duration: typeof chord.duration === 'string' ? parseFloat(chord.duration) : chord.duration,
+          }))
+        }));
+      }
       
-      return songs.map((song: SavedSong) => ({
-        ...song,
-        chords: song.chords.map(chord => ({
-          ...chord,
-          time: typeof chord.time === 'string' ? parseFloat(chord.time) : chord.time,
-          duration: typeof chord.duration === 'string' ? parseFloat(chord.duration) : chord.duration,
-        }))
-      }));
+      // Merge songs, with AsyncStorage songs taking precedence (they can override JSON songs)
+      const songMap = new Map<string, SavedSong>();
+      
+      // First, add JSON songs
+      jsonSongs.forEach(song => {
+        songMap.set(song.id, song);
+      });
+      
+      // Then, add/override with AsyncStorage songs
+      storageSongs.forEach(song => {
+        songMap.set(song.id, song);
+      });
+      
+      // Convert map to array and sort by dateAnalyzed (newest first)
+      const allSongs = Array.from(songMap.values());
+      allSongs.sort((a, b) => {
+        const dateA = new Date(a.dateAnalyzed).getTime();
+        const dateB = new Date(b.dateAnalyzed).getTime();
+        return dateB - dateA;
+      });
+      
+      return allSongs;
     } catch (error) {
       console.error('Error getting songs:', error);
-      return [];
+      // Fallback to just JSON songs if AsyncStorage fails
+      return loadSongsFromJSON();
     }
   }
 
@@ -74,6 +183,7 @@ class SongStorageService {
       const song = songs.find(song => song.id === id);
       
       if (song) {
+        // Ensure chords are normalized
         song.chords = song.chords.map(chord => ({
           ...chord,
           time: typeof chord.time === 'string' ? parseFloat(chord.time) : chord.time,

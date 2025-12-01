@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable, Alert, Platform } from 'react-native';
 import { router } from 'expo-router';
 import { songStorage, SavedSong } from '../src/songStorage';
 import { Link } from 'expo-router';
 import { theme } from '../src/theme';
-import { Platform } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 
 
 export default function SongLibrary() {
