@@ -5,6 +5,7 @@ import { songStorage, SavedSong } from '../src/songStorage';
 import { Link } from 'expo-router';
 import { theme } from '../src/theme';
 import * as Clipboard from 'expo-clipboard';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export default function SongLibrary() {
@@ -29,7 +30,7 @@ export default function SongLibrary() {
     });
   };
 
-  const handleDeleteSong = (id: string, name: string) => {
+  const handleDeleteSong = async (id: string, name: string) => {
     Alert.alert(
       'Delete Song',
       `Are you sure you want to delete "${name}"?`,
@@ -39,8 +40,14 @@ export default function SongLibrary() {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
-            await songStorage.deleteSong(id);
-            loadSongs();
+            try {
+              await songStorage.deleteSong(id);
+              // Reload songs to reflect the deletion
+              await loadSongs();
+            } catch (error) {
+              console.error('Error deleting song:', error);
+              Alert.alert('Error', `Failed to delete song: ${error instanceof Error ? error.message : 'Unknown error'}`);
+            }
           }
         }
       ]
@@ -134,7 +141,7 @@ export default function SongLibrary() {
         style={styles.deleteButton}
         onPress={() => handleDeleteSong(item.id, item.name)}
       >
-        <Text style={styles.deleteButtonText}>🗑️</Text>
+        <Ionicons name="trash-outline" size={20} color={theme.colors.textSecondary} />
       </Pressable>
     </View>
   );
@@ -368,9 +375,8 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     padding: 10,
-  },
-  deleteButtonText: {
-    fontSize: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   actionButtons: {
     padding: 10,
