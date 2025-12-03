@@ -152,9 +152,9 @@ npm run web
 3. Practice playing along with the chord sequence
 4. Use the piano to match the detected chords
 
-## 🔧 Optional: Flask Backend
+## 🔧 Flask Backend (Required for Persistence)
 
-The app performs chord detection locally, but you can optionally run a Flask backend for server-side detection or experimentation.
+The app requires the Flask backend to be running to save and load songs from the persistent database.
 
 ### Setup
 
@@ -177,9 +177,11 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The server will run on `http://localhost:5001` with the endpoint `/check-chord`.
+The server will run on `http://localhost:5001`.
+- **API Endpoints**: `/songs` (GET, POST, DELETE)
+- **Database**: Creates `songs.db` in the root directory.
 
-> **Note**: The app uses local detection by default. To use the backend, modify `app/piano.tsx` to call `http://localhost:5001/check-chord` instead of the local detector.
+> **Important**: You must run the backend for the song library to work. If the backend is not running, the app will fall back to a read-only list of bundled songs.
 
 ## Tech Stack
 
@@ -204,22 +206,26 @@ The server will run on `http://localhost:5001` with the endpoint `/check-chord`.
 - **@react-native-async-storage** - Async storage (legacy support)
 - **expo-clipboard** - Clipboard operations for import/export
 
-### Backend (Optional)
+### Backend (Required for Persistence)
 - **Flask** (3.0.0) - Python web framework
 - **Flask-CORS** (4.0.0) - Cross-origin resource sharing
+- **SQLite** - Persistent database for song library
 
 ## 📝 Data Storage
 
-### Song Storage Architecture
+### Persistent Song Library (SQLite)
 
-- **`songs.json`** (read-only): Fallback songs bundled with the app
-- **`userSongs.json`** (writable): User-analyzed songs stored in app's document directory
+The app now uses a **SQLite database** (`songs.db`) hosted by the Flask backend to store songs.
 
-When songs are analyzed and saved:
-1. They are written to `userSongs.json` in the app's document directory
-2. The song library merges songs from both files
-3. User songs take precedence over fallback songs with the same ID
-4. Fallback songs cannot be deleted or modified (read-only)
+- **Shared Library**: All users accessing the backend share the **same song library**.
+- **Persistence**: Songs are saved to `songs.db` and persist across app restarts and server restarts.
+- **Real-time Updates**: Changes made by one user (adding/deleting songs) are immediately visible to others if they refresh.
+
+> **Note**: Since there is no authentication, anyone with access to the app can add or delete songs from the shared library.
+
+### Legacy/Fallback Storage
+- **`songs.json`** (read-only): Fallback songs bundled with the app (used if backend is unreachable).
+- **`userSongs.json`**: Deprecated local storage (migrated to backend).
 
 ### Export/Import
 
