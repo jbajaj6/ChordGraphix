@@ -30,6 +30,22 @@ class ChordPlayer {
 
 
 
+  /*for web versions */
+
+  async initialize() {
+    if (this.initialized) return;
+    
+    if (typeof window !== 'undefined') {
+      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      this.initialized = true;
+    } else {
+      this.isWeb = false;
+    }
+  }
+
+
+
+
   private async ensureAudioMode() {
     if (this.audioModeSet) return;
     try {
