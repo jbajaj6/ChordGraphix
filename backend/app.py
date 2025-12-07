@@ -53,6 +53,7 @@ def check_chord():
         'is_correct': chord == data.get('expected_chord')
     })
 
+
 @app.route('/songs', methods=['GET', 'POST', 'OPTIONS'])
 def handle_songs():
     if request.method == 'OPTIONS':
@@ -89,6 +90,20 @@ def delete_song(song_id):
     conn.commit()
     conn.close()
     return '', 204
+
+@app.route('/songs/export', methods=['POST'])
+def export_songs_to_file():
+    try:
+        # Get all songs from the request
+        songs_data = request.json
+        
+        # Write to songs.json file
+        with open('songs.json', 'w') as f:
+            json.dump(songs_data, f, indent=2)
+        
+        return jsonify({'message': f'Successfully exported {len(songs_data)} songs to songs.json'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5001)

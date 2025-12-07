@@ -103,12 +103,12 @@ function normalizeChordNameUpper(chordName: string): string {
 
     // Handle case-sensitive M vs m BEFORE converting to lowercase
     // CM, BM, etc. (uppercase M) = major
-    normalized = normalized.replace(/^([A-G][#b]?)M(?!ajor|inor|aj|in)/, '$1major');
+    normalized = normalized.replace(/^([A-G][#b]?)M(?!ajor|inor|aj|in)/, '$1 Major');
     // Cm, Bm, etc. (lowercase m) = minor  
-    normalized = normalized.replace(/^([A-G][#b]?)m(?!ajor|inor|aj|in)/, '$1minor');
+    normalized = normalized.replace(/^([A-G][#b]?)m(?!ajor|inor|aj|in)/, '$1 Minor');
 
     // NOW convert to lowercase for remaining processing
-    normalized = normalized.toLowerCase();
+   // normalized = normalized.toLowerCase();
 
     // Handle seventh chords
     normalized = normalized
@@ -137,8 +137,8 @@ function normalizeChordNameUpper(chordName: string): string {
         normalized += ' Major';
     }
 
-    normalized = normalized.replace(/[a-z]/, (match) => match.toUpperCase());
-
+    //normalized = normalized.replace(/[a-z]/, (match) => match.toUpperCase());
+    //console.log(normalized);
     return normalized;
 }
 

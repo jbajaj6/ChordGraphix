@@ -1,6 +1,6 @@
 import * as Clipboard from 'expo-clipboard';
 import { Platform } from 'react-native';
-import songsData from './songs.json';
+import songsData from '../backend/songs.json';
 
 export interface SavedChord {
   time: number;
@@ -163,6 +163,34 @@ class SongStorageService {
     }
   }
 
+  // Export songs back to source file (requires backend)
+    async exportToSourceFile(): Promise<void> {
+        try {
+        const allSongs = await this.getAllSongs();
+        
+        if (allSongs.length === 0) {
+            throw new Error('No songs to export');
+        }
+    
+        const response = await fetch(`${API_URL}/songs/export`, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(allSongs),
+        });
+    
+        if (!response.ok) {
+            throw new Error('Failed to export songs to source file');
+        }
+    
+        console.log('Exported', allSongs.length, 'songs to songs.json');
+        } catch (error) {
+        console.error('Error exporting to source file:', error);
+        throw error;
+        }
+    }
+
   // Get all saved songs
   async getAllSongs(): Promise<SavedSong[]> {
     try {
@@ -174,7 +202,7 @@ class SongStorageService {
       const songs = await response.json();
       return songs.map(normalizeSong);
     } catch (error) {
-      console.error('Error getting songs:', error);
+      //console.error('Error getting songs:', error);
       // Fallback to bundled songs if API is unreachable
       return this.getBundledSongs();
     }

@@ -40,14 +40,15 @@ export default function SongLibrary() {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
+            console.log('Deleting...'); // Add this too
             try {
-              await songStorage.deleteSong(id);
-              // Reload songs to reflect the deletion
-              await loadSongs();
-            } catch (error) {
-              console.error('Error deleting song:', error);
-              Alert.alert('Error', `Failed to delete song: ${error instanceof Error ? error.message : 'Unknown error'}`);
-            }
+                await songStorage.deleteSong(id);
+                // Reload songs to reflect the deletion
+                await loadSongs();
+              } catch (error) {
+                console.error('Error deleting song:', error);
+                Alert.alert('Error', `Failed to delete song: ${error instanceof Error ? error.message : 'Unknown error'}`);
+              }
           }
         }
       ]
@@ -117,6 +118,20 @@ export default function SongLibrary() {
         await Clipboard.setStringAsync(jsonData);
         Alert.alert('Copied!', 'Song data copied to clipboard');
       }
+    } catch (error) {
+      Alert.alert('Export Failed', error instanceof Error ? error.message : 'Failed to export');
+    }
+  };
+
+  const handleExportToSource = async () => {
+    try {
+      if (songs.length === 0) {
+        Alert.alert('No Songs', 'You need to save some songs before exporting');
+        return;
+      }
+      
+      await songStorage.exportToSourceFile();
+      Alert.alert('✅ Export Complete', `Exported ${songs.length} songs to songs.json file!`);
     } catch (error) {
       Alert.alert('Export Failed', error instanceof Error ? error.message : 'Failed to export');
     }
@@ -225,9 +240,16 @@ export default function SongLibrary() {
 
         <View style={styles.actionButtons}>
         {Platform.OS === 'web' ? (
+            <View>
             <Pressable style={[styles.actionButton, { flex: 2 }]} onPress={handleExportDownload}>
             <Text style={styles.actionButtonText}>💾 Download JSON File</Text>
             </Pressable>
+
+            <Pressable style={styles.actionButton} onPress={handleExportToSource}>
+            <Text style={styles.actionButtonText}>📁 Save to Source</Text>
+          </Pressable>
+          </View>
+         
         ) : (
             <Pressable style={styles.actionButton} onPress={handleExport}>
             <Text style={styles.actionButtonText}>📤 Export</Text>
@@ -326,7 +348,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background ,
-    padding: 20,
+    //padding: 20,
   },
   title: {
     fontSize: 28,
