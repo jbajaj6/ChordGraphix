@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 import {
   GestureResponderEvent,
   Pressable,
@@ -89,6 +89,9 @@ export default function ChordPractice() {
   const [showHint, setShowHint] = useState(false);
   const [streak, setStreak] = useState(0);
   const [checked, setChecked] = useState(false);
+  const [chordBuffer, setChordBuffer] = useState<string[]>([]);
+  const chordTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const CHORD_WINDOW_MS = 250; // 250ms window to collect notes
 
   const isCompact = width < 620;
   const isTablet = width >= 768;
@@ -154,22 +157,89 @@ export default function ChordPractice() {
     setShowHint(false);
   };
 
-  const toggleKey = async (key: PianoKey) => {
-    const { uniqueKey, note, octave } = key;
-    const isPressed = pressedKeys.includes(uniqueKey);
+  const currentBatchRef = useRef<Set<string>>(new Set());
+const batchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    if (!isPressed) {
-      try {
-        await chordPlayer.playNote(`${note}${octave}`, 0.45);
-      } catch (error) {
-        console.error('Error playing note:', error);
-      }
+const toggleKey = async (key: PianoKey) => {
+  const { uniqueKey, note, octave } = key;
+  const isPressed = pressedKeys.includes(uniqueKey);
+
+  if (!isPressed) {
+    const noteWithOctave = `${note}${octave}`;
+    
+    // Add to pressed keys for visual feedback
+    setPressedKeys((prev) => [...prev, uniqueKey]);
+    
+    // Add to current batch
+    currentBatchRef.current.add(noteWithOctave);
+    
+    // Clear any existing batch timer
+    if (batchTimerRef.current) {
+      clearTimeout(batchTimerRef.current);
     }
+    
+    // Set a very short timer to catch simultaneous presses
+    batchTimerRef.current = setTimeout(async () => {
+      const notesToPlay = Array.from(currentBatchRef.current);
+      
+      if (notesToPlay.length > 0) {
+        try {
+          // Play all notes in the batch as a chord
+          await chordPlayer.playChord(notesToPlay, 1.35);
+        } catch (error) {
+          console.error('Error playing chord:', error);
+        }
+      }
 
-    setPressedKeys((prev) =>
-      prev.includes(uniqueKey) ? prev.filter((k) => k !== uniqueKey) : [...prev, uniqueKey],
-    );
+      if (!currentChallenge) {
+        setFeedback('Start a new challenge first!');
+        return;
+    }
+   // const playedNotes = getPressedNoteNames();
+    const result = checkChordMatch(currentChallenge, notesToPlay);
+
+    console.log(notesToPlay);
+
+        if (result.isCorrect) {
+            setFeedback(result.feedback);
+            setAttempts(prev => prev + 1);
+
+            if (result.isCorrect) {
+            setScore(prev => prev + 1);
+            setStreak(prev => prev + 1);
+            
+            // Auto-advance after a short delay
+            setTimeout(() => {
+                startNewChallenge();
+            }, 2000);
+            }
+        }
+      
+      // Clear the batch
+      currentBatchRef.current.clear();
+      
+      // Auto-clear visual feedback after a delay
+      setTimeout(() => {
+        setPressedKeys([]);
+      }, 5000);
+
+        
+    }, 250); // Very short 50ms window to catch simultaneous touches
+
+  } else {
+    // If already pressed, remove it immediately
+    setPressedKeys((prev) => prev.filter((k) => k !== uniqueKey));
+  }
+};
+
+// Cleanup
+useEffect(() => {
+  return () => {
+    if (batchTimerRef.current) {
+      clearTimeout(batchTimerRef.current);
+    }
   };
+}, []);
 
   const getPressedNotesWithOctave = (): string[] =>
     pressedKeys

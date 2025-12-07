@@ -121,6 +121,9 @@ export default function SongAnalyzer() {
       setResults(null);
     } catch (error) {
       Alert.alert('Error', 'Failed to save song');
+      console.error('Error saving song:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      Alert.alert('Error', `Failed to save song: ${errorMessage}`);
     }
   };
 

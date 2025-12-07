@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, FlatList, Pressable, Alert } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Pressable, Alert, Platform } from 'react-native';
 import { router } from 'expo-router';
 import { songStorage, SavedSong } from '../src/songStorage';
 import { Link } from 'expo-router';
 import { theme } from '../src/theme';
-import { Platform } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export default function SongLibrary() {
@@ -29,7 +30,7 @@ export default function SongLibrary() {
     });
   };
 
-  const handleDeleteSong = (id: string, name: string) => {
+  const handleDeleteSong = async (id: string, name: string) => {
     Alert.alert(
       'Delete Song',
       `Are you sure you want to delete "${name}"?`,
@@ -39,8 +40,15 @@ export default function SongLibrary() {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
-            await songStorage.deleteSong(id);
-            loadSongs();
+            console.log('Deleting...'); // Add this too
+            try {
+                await songStorage.deleteSong(id);
+                // Reload songs to reflect the deletion
+                await loadSongs();
+              } catch (error) {
+                console.error('Error deleting song:', error);
+                Alert.alert('Error', `Failed to delete song: ${error instanceof Error ? error.message : 'Unknown error'}`);
+              }
           }
         }
       ]
@@ -115,6 +123,20 @@ export default function SongLibrary() {
     }
   };
 
+  const handleExportToSource = async () => {
+    try {
+      if (songs.length === 0) {
+        Alert.alert('No Songs', 'You need to save some songs before exporting');
+        return;
+      }
+      
+      await songStorage.exportToSourceFile();
+      Alert.alert('✅ Export Complete', `Exported ${songs.length} songs to songs.json file!`);
+    } catch (error) {
+      Alert.alert('Export Failed', error instanceof Error ? error.message : 'Failed to export');
+    }
+  };
+
   const renderSongItem = ({ item }: { item: SavedSong }) => (
     <View style={styles.songItem}>
       <Pressable 
@@ -134,7 +156,7 @@ export default function SongLibrary() {
         style={styles.deleteButton}
         onPress={() => handleDeleteSong(item.id, item.name)}
       >
-        <Text style={styles.deleteButtonText}>🗑️</Text>
+        <Ionicons name="trash-outline" size={20} color={theme.colors.textSecondary} />
       </Pressable>
     </View>
   );
@@ -218,9 +240,16 @@ export default function SongLibrary() {
 
         <View style={styles.actionButtons}>
         {Platform.OS === 'web' ? (
+            <View>
             <Pressable style={[styles.actionButton, { flex: 2 }]} onPress={handleExportDownload}>
             <Text style={styles.actionButtonText}>💾 Download JSON File</Text>
             </Pressable>
+
+            <Pressable style={styles.actionButton} onPress={handleExportToSource}>
+            <Text style={styles.actionButtonText}>📁 Save to Source</Text>
+          </Pressable>
+          </View>
+         
         ) : (
             <Pressable style={styles.actionButton} onPress={handleExport}>
             <Text style={styles.actionButtonText}>📤 Export</Text>
@@ -319,7 +348,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background ,
-    padding: 20,
+    //padding: 20,
   },
   title: {
     fontSize: 28,
@@ -368,9 +397,8 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     padding: 10,
-  },
-  deleteButtonText: {
-    fontSize: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   actionButtons: {
     padding: 10,
