@@ -1,5 +1,168 @@
 [
   {
+    "id": "1765210653976",
+    "name": "02 Ophelia",
+    "artist": "Lumineers",
+    "dateAnalyzed": "2025-12-08T16:17:33.976Z",
+    "duration": 160.100125,
+    "analyzedDuration": 30,
+    "key": "A",
+    "scale": "major",
+    "bpm": null,
+    "chords": [
+      {
+        "time": 0,
+        "duration": 2,
+        "chord": "D#",
+        "notes": [
+          "D#",
+          "G",
+          "A#"
+        ]
+      },
+      {
+        "time": 2,
+        "duration": 2,
+        "chord": "F#",
+        "notes": [
+          "F#",
+          "A#",
+          "C#"
+        ]
+      },
+      {
+        "time": 4,
+        "duration": 2,
+        "chord": "D#m",
+        "notes": [
+          "D#",
+          "F#",
+          "A#"
+        ]
+      },
+      {
+        "time": 6,
+        "duration": 2,
+        "chord": "F#m",
+        "notes": [
+          "F#",
+          "A",
+          "C#"
+        ]
+      },
+      {
+        "time": 8,
+        "duration": 2,
+        "chord": "F",
+        "notes": [
+          "F",
+          "A",
+          "C"
+        ]
+      },
+      {
+        "time": 10,
+        "duration": 2,
+        "chord": "A",
+        "notes": [
+          "A",
+          "C#",
+          "E"
+        ]
+      },
+      {
+        "time": 12,
+        "duration": 2,
+        "chord": "Dm",
+        "notes": [
+          "D",
+          "F",
+          "A"
+        ]
+      },
+      {
+        "time": 14,
+        "duration": 2,
+        "chord": "F",
+        "notes": [
+          "F",
+          "A",
+          "C"
+        ]
+      },
+      {
+        "time": 16,
+        "duration": 2,
+        "chord": "A",
+        "notes": [
+          "A",
+          "C#",
+          "E"
+        ]
+      },
+      {
+        "time": 18,
+        "duration": 2,
+        "chord": "Dm",
+        "notes": [
+          "D",
+          "F",
+          "A"
+        ]
+      },
+      {
+        "time": 20,
+        "duration": 2,
+        "chord": "Dm",
+        "notes": [
+          "D",
+          "F",
+          "A"
+        ]
+      },
+      {
+        "time": 22,
+        "duration": 2,
+        "chord": "F",
+        "notes": [
+          "F",
+          "A",
+          "C"
+        ]
+      },
+      {
+        "time": 24,
+        "duration": 2,
+        "chord": "A",
+        "notes": [
+          "A",
+          "C#",
+          "E"
+        ]
+      },
+      {
+        "time": 26,
+        "duration": 2,
+        "chord": "Dm",
+        "notes": [
+          "D",
+          "F",
+          "A"
+        ]
+      },
+      {
+        "time": 28,
+        "duration": 2,
+        "chord": "Am",
+        "notes": [
+          "A",
+          "C",
+          "E"
+        ]
+      }
+    ]
+  },
+  {
     "id": "1765133832866",
     "name": "02 Sign of the Times",
     "artist": "Harry Styles",
@@ -320,332 +483,6 @@
         "notes": [
           "A",
           "C#",
-          "E"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "1765126854268",
-    "name": "02 Ophelia",
-    "artist": "Lumineers",
-    "dateAnalyzed": "2025-12-07T17:00:54.268Z",
-    "duration": 160.100125,
-    "analyzedDuration": 30,
-    "key": "A",
-    "scale": "major",
-    "bpm": null,
-    "chords": [
-      {
-        "time": 0,
-        "duration": 2,
-        "chord": "D#",
-        "notes": [
-          "D#",
-          "G",
-          "A#"
-        ]
-      },
-      {
-        "time": 2,
-        "duration": 2,
-        "chord": "F#",
-        "notes": [
-          "F#",
-          "A#",
-          "C#"
-        ]
-      },
-      {
-        "time": 4,
-        "duration": 2,
-        "chord": "D#m",
-        "notes": [
-          "D#",
-          "F#",
-          "A#"
-        ]
-      },
-      {
-        "time": 6,
-        "duration": 2,
-        "chord": "F#m",
-        "notes": [
-          "F#",
-          "A",
-          "C#"
-        ]
-      },
-      {
-        "time": 8,
-        "duration": 2,
-        "chord": "F",
-        "notes": [
-          "F",
-          "A",
-          "C"
-        ]
-      },
-      {
-        "time": 10,
-        "duration": 2,
-        "chord": "A",
-        "notes": [
-          "A",
-          "C#",
-          "E"
-        ]
-      },
-      {
-        "time": 12,
-        "duration": 2,
-        "chord": "Dm",
-        "notes": [
-          "D",
-          "F",
-          "A"
-        ]
-      },
-      {
-        "time": 14,
-        "duration": 2,
-        "chord": "F",
-        "notes": [
-          "F",
-          "A",
-          "C"
-        ]
-      },
-      {
-        "time": 16,
-        "duration": 2,
-        "chord": "A",
-        "notes": [
-          "A",
-          "C#",
-          "E"
-        ]
-      },
-      {
-        "time": 18,
-        "duration": 2,
-        "chord": "Dm",
-        "notes": [
-          "D",
-          "F",
-          "A"
-        ]
-      },
-      {
-        "time": 20,
-        "duration": 2,
-        "chord": "Dm",
-        "notes": [
-          "D",
-          "F",
-          "A"
-        ]
-      },
-      {
-        "time": 22,
-        "duration": 2,
-        "chord": "F",
-        "notes": [
-          "F",
-          "A",
-          "C"
-        ]
-      },
-      {
-        "time": 24,
-        "duration": 2,
-        "chord": "A",
-        "notes": [
-          "A",
-          "C#",
-          "E"
-        ]
-      },
-      {
-        "time": 26,
-        "duration": 2,
-        "chord": "Dm",
-        "notes": [
-          "D",
-          "F",
-          "A"
-        ]
-      },
-      {
-        "time": 28,
-        "duration": 2,
-        "chord": "Am",
-        "notes": [
-          "A",
-          "C",
-          "E"
-        ]
-      }
-    ]
-  },
-  {
-    "id": "1764789317881",
-    "name": "02 Ophelia 1",
-    "artist": "Lumineers",
-    "dateAnalyzed": "2025-12-03T19:15:17.881Z",
-    "duration": 160.100125,
-    "analyzedDuration": 30,
-    "key": "A",
-    "scale": "major",
-    "bpm": null,
-    "chords": [
-      {
-        "time": 0,
-        "duration": 2,
-        "chord": "D#",
-        "notes": [
-          "D#",
-          "G",
-          "A#"
-        ]
-      },
-      {
-        "time": 2,
-        "duration": 2,
-        "chord": "F#",
-        "notes": [
-          "F#",
-          "A#",
-          "C#"
-        ]
-      },
-      {
-        "time": 4,
-        "duration": 2,
-        "chord": "D#m",
-        "notes": [
-          "D#",
-          "F#",
-          "A#"
-        ]
-      },
-      {
-        "time": 6,
-        "duration": 2,
-        "chord": "F#m",
-        "notes": [
-          "F#",
-          "A",
-          "C#"
-        ]
-      },
-      {
-        "time": 8,
-        "duration": 2,
-        "chord": "F",
-        "notes": [
-          "F",
-          "A",
-          "C"
-        ]
-      },
-      {
-        "time": 10,
-        "duration": 2,
-        "chord": "A",
-        "notes": [
-          "A",
-          "C#",
-          "E"
-        ]
-      },
-      {
-        "time": 12,
-        "duration": 2,
-        "chord": "Dm",
-        "notes": [
-          "D",
-          "F",
-          "A"
-        ]
-      },
-      {
-        "time": 14,
-        "duration": 2,
-        "chord": "F",
-        "notes": [
-          "F",
-          "A",
-          "C"
-        ]
-      },
-      {
-        "time": 16,
-        "duration": 2,
-        "chord": "A",
-        "notes": [
-          "A",
-          "C#",
-          "E"
-        ]
-      },
-      {
-        "time": 18,
-        "duration": 2,
-        "chord": "Dm",
-        "notes": [
-          "D",
-          "F",
-          "A"
-        ]
-      },
-      {
-        "time": 20,
-        "duration": 2,
-        "chord": "Dm",
-        "notes": [
-          "D",
-          "F",
-          "A"
-        ]
-      },
-      {
-        "time": 22,
-        "duration": 2,
-        "chord": "F",
-        "notes": [
-          "F",
-          "A",
-          "C"
-        ]
-      },
-      {
-        "time": 24,
-        "duration": 2,
-        "chord": "A",
-        "notes": [
-          "A",
-          "C#",
-          "E"
-        ]
-      },
-      {
-        "time": 26,
-        "duration": 2,
-        "chord": "Dm",
-        "notes": [
-          "D",
-          "F",
-          "A"
-        ]
-      },
-      {
-        "time": 28,
-        "duration": 2,
-        "chord": "Am",
-        "notes": [
-          "A",
-          "C",
           "E"
         ]
       }

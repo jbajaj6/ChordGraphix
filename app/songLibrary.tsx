@@ -31,29 +31,42 @@ export default function SongLibrary() {
   };
 
   const handleDeleteSong = async (id: string, name: string) => {
-    Alert.alert(
-      'Delete Song',
-      `Are you sure you want to delete "${name}"?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            console.log('Deleting...'); // Add this too
-            try {
-                await songStorage.deleteSong(id);
-                // Reload songs to reflect the deletion
-                await loadSongs();
-              } catch (error) {
-                console.error('Error deleting song:', error);
-                Alert.alert('Error', `Failed to delete song: ${error instanceof Error ? error.message : 'Unknown error'}`);
-              }
-          }
+    console.log('handleDeleteSong called!', id, name);
+    
+    // Platform-specific confirmation
+    let confirmed = false;
+    
+    if (Platform.OS === 'web') {
+      confirmed = window.confirm(`Are you sure you want to delete "${name}"?`);
+    } else {
+      // On native, use Alert.alert with a promise wrapper
+      confirmed = await new Promise((resolve) => {
+        Alert.alert(
+          'Delete Song',
+          `Are you sure you want to delete "${name}"?`,
+          [
+            { text: 'Cancel', style: 'cancel', onPress: () => resolve(false) },
+            { text: 'Delete', style: 'destructive', onPress: () => resolve(true) }
+          ]
+        );
+      });
+    }
+    
+    if (confirmed) {
+      console.log('Deleting...');
+      try {
+        await songStorage.deleteSong(id);
+        await loadSongs();
+      } catch (error) {
+        console.error('Error deleting song:', error);
+        if (Platform.OS === 'web') {
+          window.alert(`Failed to delete song: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        } else {
+          Alert.alert('Error', `Failed to delete song: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
-      ]
-    );
-  };
+      }
+    }
+};
 
   const handleExport = async () => {
     try {
