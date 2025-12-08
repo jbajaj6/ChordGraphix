@@ -25,7 +25,7 @@ export interface SavedSong {
 // Check if we're on web platform
 const isWeb = Platform.OS === 'web';
 // API URL for the backend
-const API_URL = 'http://localhost:5001';
+const API_URL = 'http://10.0.0.84:5001'; //has to be your computer's API url
 
 // Normalize song data from JSON to match SavedSong interface
 function normalizeSong(song: any): SavedSong {
@@ -192,19 +192,22 @@ class SongStorageService {
     }
 
   // Get all saved songs
-  async getAllSongs(): Promise<SavedSong[]> {
+  // Get all saved songs
+async getAllSongs(): Promise<SavedSong[]> {
     try {
-      const response = await fetch(`${API_URL}/songs`);
+      const response = await fetch(`${API_URL}/songs`, {
+        cache: 'no-store', // Prevent caching
+      });
       if (!response.ok) {
-        console.warn('Failed to fetch songs from API, falling back to bundled.');
-        return this.getBundledSongs();
+        throw new Error('Backend unavailable');
       }
       const songs = await response.json();
+      console.log('Fetched songs from backend:', songs.length);
       return songs.map(normalizeSong);
     } catch (error) {
-      //console.error('Error getting songs:', error);
-      // Fallback to bundled songs if API is unreachable
-      return this.getBundledSongs();
+      console.error('Error getting songs from backend:', error);
+      // Don't fall back during operations that modify data
+      throw error;
     }
   }
 
@@ -223,14 +226,23 @@ class SongStorageService {
   // Delete a song
   async deleteSong(id: string): Promise<void> {
     try {
-      const response = await fetch(`${API_URL}/songs/${id}`, {
-        method: 'DELETE',
+      console.log('Getting all songs from backend...');
+      const allSongs = await this.getAllSongs(); // ← Force backend, no fallback
+      console.log('Got songs:', allSongs.length);
+      
+      const filteredSongs = allSongs.filter(song => song.id !== id);
+      console.log('Filtered to:', filteredSongs.length);
+      
+      const response = await fetch(`${API_URL}/songs/export`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(filteredSongs),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to delete song');
       }
-
+      
       console.log('Song deleted from backend');
     } catch (error) {
       console.error('Error deleting song:', error);

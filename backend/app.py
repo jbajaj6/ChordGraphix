@@ -91,17 +91,35 @@ def delete_song(song_id):
     conn.close()
     return '', 204
 
-@app.route('/songs/export', methods=['POST'])
+@app.route('/songs/export', methods=['POST', 'OPTIONS'])
 def export_songs_to_file():
+    if request.method == 'OPTIONS':
+        return '', 200
+        
     try:
         # Get all songs from the request
         songs_data = request.json
         
-        # Write to songs.json file
+        conn = get_db_connection()
+        
+        # Clear all existing songs from database
+        conn.execute('DELETE FROM songs')
+        
+        # Insert all songs from the request
+        for song in songs_data:
+            song_id = song.get('id')
+            date_analyzed = song.get('dateAnalyzed')
+            conn.execute('INSERT INTO songs (id, data, date_analyzed) VALUES (?, ?, ?)',
+                        (song_id, json.dumps(song), date_analyzed))
+        
+        conn.commit()
+        conn.close()
+        
+        # Also write to songs.json file for backup
         with open('songs.json', 'w') as f:
             json.dump(songs_data, f, indent=2)
         
-        return jsonify({'message': f'Successfully exported {len(songs_data)} songs to songs.json'}), 200
+        return jsonify({'message': f'Successfully exported {len(songs_data)} songs'}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
